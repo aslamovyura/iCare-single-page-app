@@ -8,14 +8,15 @@ import { PatientsComponent }   from './patients';
 import { ReportsComponent }   from './reports';
 import { LoginComponent }   from './login';
 import { RegisterComponent }   from './register';
+import { AuthGuard } from './_guards';
 
 const appRoutes: Routes =[
-    { path: '', component: HomeComponent},
-    { path: 'home', component: HomeComponent},
-    { path: 'sensors', component: SensorsComponent},
-    { path: 'records', component: RecordsComponent},
-    { path: 'patients', component: PatientsComponent}, 
-    { path: 'reports', component: ReportsComponent},
+    { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+    { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+    { path: 'sensors', component: SensorsComponent, canActivate: [AuthGuard] },
+    { path: 'records', component: RecordsComponent, canActivate: [AuthGuard] },
+    { path: 'patients', component: PatientsComponent, canActivate: [AuthGuard] }, 
+    { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent},
     { path: 'register', component: RegisterComponent},
 

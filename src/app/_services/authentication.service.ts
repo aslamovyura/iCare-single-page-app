@@ -14,18 +14,20 @@ export class AuthenticationService {
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
+    // Getter for easy access to current user in local storage.
     public get currentUserValue(): User {
         return this.currentUserSubject.value;
     }
 
     login(email: string, password: string) {
+
+        const url = 'http://localhost:4004/api/accounts/login';
         const myHeaders = new HttpHeaders().set('Content-Type', 'application/json');
-        //myHeaders.append('Access-Control-Allow-Origin', 'http://localhost:4004');
-        //myHeaders.append('Access-Control-Allow-Credentials', 'true');
-        return this.http.post<any>('http://localhost:4004/api/accounts/login', JSON.stringify({ email, password }), { headers: myHeaders })
+
+        return this.http.post<any>(url, JSON.stringify({ email, password }), { headers: myHeaders })
             .pipe(map(user => {
 
-                // Login successful if there's a jwt token in the response.
+                // Login is successful, if there's a jwt token in the response.
                 if(user && user.token) {
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject.next(user);
