@@ -8,19 +8,19 @@ import { HttpClientModule }   from '@angular/common/http';
 
 import { AppComponent }   from './app.component';
 
-import { NavComponent }   from './components/navigation/nav.component';
-import { FooterComponent}   from './components/footer/footer.component'
+import { NavComponent }   from './navigation/nav.component';
+import { FooterComponent}   from './footer/footer.component'
 
-import { HomeComponent }   from './components/home/home.component';
-import { NotFoundComponent} from './components/not-found/not-found.component';
+import { HomeComponent }   from './home/home.component';
+import { NotFoundComponent} from './not-found/not-found.component';
 
-import { SensorsComponent }   from './components/sensors/sensorts.component';
-import { RecordsComponent }   from './components/records/records.component';
-import { PatientsComponent }   from './components/patients/patients.component';
-import { ReportsComponent }   from './components/reports/reports.component';
+import { SensorsComponent }   from './sensors/sensorts.component';
+import { RecordsComponent }   from './records/records.component';
+import { PatientsComponent }   from './patients/patients.component';
+import { ReportsComponent }   from './reports/reports.component';
 
-import { LoginComponent }   from './components/login/login.component';
-import { RegisterComponent }   from './components/register/register.component';
+import { LoginComponent }   from './login/login.component';
+import { RegisterComponent }   from './register/register.component';
 
 
 const appRoutes: Routes =[
