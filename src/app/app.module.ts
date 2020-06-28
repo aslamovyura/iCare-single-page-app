@@ -1,43 +1,49 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import {Routes, RouterModule} from '@angular/router';
-
-import { FormsModule }   from '@angular/forms';
+import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import { HttpClientModule }   from '@angular/common/http';
 
 import { AppComponent }   from './app.component';
+import { routing }   from './app.routing';
 
-import { NavComponent }   from './components/navigation/nav.component';
-import { FooterComponent}   from './components/footer/footer.component'
+import { NavComponent }   from './navigation';
+import { FooterComponent}   from './footer'
+import { HomeComponent }   from './home';
+import { NotFoundComponent} from './not-found';
+import { SensorsComponent }   from './sensors';
+import { RecordsComponent }   from './records';
+import { PatientsComponent }   from './patients';
+import { ReportsComponent }   from './reports';
+import { LoginComponent }   from './login';
+import { RegisterComponent }   from './register';
 
-import { HomeComponent }   from './components/home/home.component';
-import { NotFoundComponent} from './components/not-found/not-found.component';
+import { AlertComponent } from './_components';
 
-import { SensorsComponent }   from './components/sensors/sensorts.component';
-import { RecordsComponent }   from './components/records/records.component';
-import { PatientsComponent }   from './components/patients/patients.component';
-import { ReportsComponent }   from './components/reports/reports.component';
-
-import { LoginComponent }   from './components/login/login.component';
-import { RegisterComponent }   from './components/register/register.component';
-
-
-const appRoutes: Routes =[
-    { path: 'home', component: HomeComponent},
-    { path: 'sensors', component: SensorsComponent},
-    { path: 'records', component: RecordsComponent},
-    { path: 'patients', component: PatientsComponent}, 
-    { path: 'reports', component: ReportsComponent},
-    { path: 'login', component: LoginComponent},
-    { path: 'register', component: RegisterComponent},
-    { path: '**', component: NotFoundComponent},
-];
 
 @NgModule({
-    imports:      [ BrowserModule, FormsModule, HttpClientModule, RouterModule.forRoot(appRoutes)],
-    declarations: [ AppComponent, NavComponent, FooterComponent, HomeComponent, NotFoundComponent,SensorsComponent, 
-                    RecordsComponent, PatientsComponent, ReportsComponent, RegisterComponent, LoginComponent],
-    bootstrap:    [ AppComponent ]
+    imports: [
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        routing
+    ],
+    declarations: [
+        AppComponent,
+        NavComponent,
+        FooterComponent,
+        HomeComponent,
+        NotFoundComponent,
+        SensorsComponent, 
+        RecordsComponent,
+        PatientsComponent,
+        ReportsComponent,
+        RegisterComponent,
+        LoginComponent,
+        AlertComponent
+    ],
+    bootstrap: [ AppComponent ]
 })
+
 export class AppModule { }

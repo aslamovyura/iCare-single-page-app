@@ -20,14 +20,28 @@
                     <a class="nav-link" routerLink="/reports">Reports</a>
                 </li>
             </ul>
-            <ul class="form-inline navbar-nav my-2 my-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/register">Register</a>
-                </li>
-            </ul>
         </div>
+        <div *ngIf="currentUser; then authorizedTemplate else unauthorizedTemplate"></div>
     </nav>
 </div>
+
+<ng-template #unauthorizedTemplate>
+    <ul class="form-inline navbar-nav my-2 my-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/login">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLink="/register">Register</a>
+        </li>
+    </ul>
+</ng-template>
+<ng-template #authorizedTemplate>
+    <ul class="form-inline navbar-nav my-2 my-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" routerLink="">{{currentUser.username}}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" (click)="logout()">Logout</a>
+        </li>
+    </ul>
+</ng-template>
