@@ -3,6 +3,7 @@ export class User {
     email: string;
     password: string;
     username: string;
+    role: number;
     isActive: boolean;
     firstName: string;
     lastName: string;
@@ -10,7 +11,7 @@ export class User {
     passport: string;
     birthDate: Date;
     gender: string;
-    height: string;
-    weight: string;
+    height: number;
+    weight: number;
     token: string;
 }

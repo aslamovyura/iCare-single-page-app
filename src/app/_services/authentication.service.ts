@@ -22,8 +22,8 @@ export class AuthenticationService {
     login(email: string, password: string) {
 
         // TODO: extract url from the configuration file.
-        //const url = 'http://localhost:4004/api/accounts/login'; // Development
-        const url = 'http://localhost:3000/accounts/login'; // Production (docker)
+        const url = 'http://localhost:4004/api/accounts/login'; // Development
+        //const url = 'http://localhost:3000/accounts/login'; // Production (docker)
         const myHeaders = new HttpHeaders().set('Content-Type', 'application/json');
 
         return this.http.post<any>(url, JSON.stringify({ email, password }), { headers: myHeaders })
