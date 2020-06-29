@@ -2,7 +2,7 @@ import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
-import { HttpClientModule }   from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS }   from '@angular/common/http';
 
 import { AppComponent }   from './app.component';
 import { routing }   from './app.routing';
@@ -19,6 +19,7 @@ import { LoginComponent }   from './login';
 import { RegisterComponent }   from './register';
 
 import { AlertComponent } from './_components';
+import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 
 
 @NgModule({
@@ -42,6 +43,10 @@ import { AlertComponent } from './_components';
         RegisterComponent,
         LoginComponent,
         AlertComponent
+    ],
+    providers: [
+        {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}, // Add JWT token to the request header.
+        {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}, // Catch errors.
     ],
     bootstrap: [ AppComponent ]
 })
