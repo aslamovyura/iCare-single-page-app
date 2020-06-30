@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { User } from '../_models';
 
 @Injectable({ providedIn: 'root'})
@@ -23,11 +22,11 @@ export class UserService {
 
     registerAccount(user: User) {
         const myHeaders = new HttpHeaders().set('Content-Type', 'application/json');
-        return this.http.post(`${this.accountUrl}/register`, JSON.stringify(user), { headers: myHeaders })
+        return this.http.post(`${this.accountUrl}/register`, JSON.stringify(user), { headers: myHeaders, responseType: 'json' });
     }
 
     registerProfile(user: User) {
         const myHeaders = new HttpHeaders().set('Content-Type', 'application/json');
-        return this.http.post(`${this.profileUrl}`, JSON.stringify(user), { headers: myHeaders });
+        return this.http.post(`${this.profileUrl}`, JSON.stringify(user), { headers: myHeaders, responseType: 'json' });
     }
 }

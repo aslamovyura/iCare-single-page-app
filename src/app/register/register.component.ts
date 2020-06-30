@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService, AuthenticationService, UserService } from '../_services';
-import { first } from 'rxjs/operators';
+import { User } from '../_models/user';
 
 @Component({
     selector: 'register-app',
@@ -27,69 +27,75 @@ export class RegisterComponent implements OnInit{
 
     ngOnInit() {
         this.registerForm = this.formBuilder.group({
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
+            accountId:  ['00000000-0000-0000-0000-000000000000', null],
+            firstName:  ['', [Validators.required]],
+            lastName:   ['', [Validators.required]],
             middleName: ['', null],
-            email: ['', Validators.required, Validators.email],
-            role: [1, null],
-            username: ['', Validators.required],
-            password: ['', Validators.required, Validators.maxLength(6)],
-            birthDate: [Date.parse('1984/01/01'), Validators.required],
-            gender: ['Male', Validators.required],
-            passport: ['', Validators.required],
-            weight: [60, Validators.required],
-            height: [170, Validators.required]
+            email:      ['', [Validators.required], Validators.email],
+            password:   ['', [Validators.required]],
+            role:       [1, null],
+            isActive:   [true, null],
+            username:   ['', [Validators.required]],
+            birthDate:  ['', [Validators.required]],
+            gender:     ['Male', null],
+            weight:     [60, null],
+            height:     [170, null]
         });
     }
 
     // Getter for easy access to register form fields.
     get f() { return this.registerForm.controls; }
 
+    // Submit registration form.
     onSubmit() {
         this.submitted = true;
 
-        if (this.registerForm.invalid){
+        if (this.isInvalidRegisterForm()){
             return;
         }
 
         this.loading = true;
-        console.log(this.registerForm.value);
         this.userService.registerAccount(this.registerForm.value)
-            .pipe(first())
             .subscribe(
-                data => {
-                    console.log('Account registered successfully');
-                    this.alertService.success('Account registered successfully', true);
+                account => {
                     this.authenticationService.login(this.f.email.value, this.f.password.value)
-                        .pipe(first())
                         .subscribe(
-                            data => {
-                                console.log('Login successful');
-                                this.userService.registerProfile(this.registerForm.value)
-                                .pipe(first())
-                                .subscribe(
-                                    data => {
-                                        console.log('Profile created successfully!');
-                                        this.alertService.success('Profile created successfully!', false);
-                                        this.router.navigate(['/']);
-                                    },
-                                    error => {
-                                        console.error(`Profile creation error ${error.message}`);
-                                        this.alertService.error(error);
-                                        this.loading = false;
-                                    });
+                            login => {
+                                var user = this.registerForm.value;
+                                user.accountId = (account as User).id;
+                                this.userService.registerProfile(user)
+                                    .subscribe(
+                                        profile => {
+                                            this.router.navigate(['/']);
+                                        },
+                                        error => {
+                                            this.alertService.error(error);
+                                            this.loading = false;
+                                            this.authenticationService.logout();
+                                        });
                             },
                             error => {
-                                console.error('Login error');
                                 this.alertService.error(error);
                                 this.loading = false;
                             });
                 },
                 error => {
-                    console.error('Account registration error');
                     this.alertService.error(error);
                     this.loading = false;
                 }
             )
+    }
+
+    // Check validity of registration form.
+    public isInvalidRegisterForm() : boolean {
+        let invalid = [];
+        let controls = this.registerForm.controls;
+        for (const name in controls) {
+            if (controls[name].invalid) {
+                invalid.push(name);
+            }
+        }
+        let isValid = invalid.length > 0;
+        return isValid;
     }
 }
