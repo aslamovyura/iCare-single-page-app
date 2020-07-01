@@ -9,6 +9,7 @@ import { ReportsComponent }   from './reports';
 import { LoginComponent }   from './login';
 import { RegisterComponent }   from './register';
 import { AuthGuard } from './_guards';
+import { ProfileComponent, EditProfileComponent } from './profile';
 
 const appRoutes: Routes =[
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
@@ -19,6 +20,9 @@ const appRoutes: Routes =[
     { path: 'reports', component: ReportsComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent},
     { path: 'register', component: RegisterComponent},
+
+    { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
+    { path: 'profile/edit', component: EditProfileComponent, canActivate: [AuthGuard] },
 
     { path: '**', component: NotFoundComponent},
 ];

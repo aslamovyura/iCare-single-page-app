@@ -1,0 +1,29 @@
+<h1>User Profile</h1>
+<div class="form-group">
+    <label for="firstName"><strong>Name: </strong></label>
+    <span>
+        {{f.lastName.value}} {{f.firstName.value}} {{f.middleName.value}}
+    </span>
+</div>
+
+<div class="form-group">
+    <label for="birthDate"><strong>Birth date: </strong></label>
+    <span> {{f.birthDate.value}}</span>
+</div>
+
+<div class="form-group">
+    <label for="gender"><strong>Gender: </strong> </label>
+    <span> {{f.gender.value}}</span>
+</div>
+
+<div class="form-group">
+    <label for="height"><strong>Height, sm: </strong></label>
+    <span> {{f.height.value}}</span>
+</div>
+
+<div class="form-group">
+    <label for="weight"><strong>Weight, kg: </strong></label>
+    <span> {{f.weight.value}}</span>
+</div>
+
+<a routerLink="/profile/edit" class="btn btn-primary">Edit</a>

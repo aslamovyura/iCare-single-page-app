@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root'})
 export class AccountService {
-    // profileUrl: string;
     accountUrl: string;
 
     constructor(private http: HttpClient) { 
-        // this.profileUrl = 'http://localhost:4003/api/profiles';
         this.accountUrl = 'http://localhost:4004/api/accounts';
     }
 
@@ -32,9 +30,4 @@ export class AccountService {
     deleteById(id:string) {
         return this.http.delete<Account>(`${this.accountUrl}/${id}`);
     }
-
-    // registerProfile(user: User) {
-    //     const myHeaders = new HttpHeaders().set('Content-Type', 'application/json');
-    //     return this.http.post(`${this.profileUrl}`, JSON.stringify(user), { headers: myHeaders, responseType: 'json' });
-    // }
 }

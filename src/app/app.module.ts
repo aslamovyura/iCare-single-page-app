@@ -20,7 +20,7 @@ import { RegisterComponent }   from './register';
 
 import { AlertComponent } from './_components';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
-
+import { ProfileComponent, EditProfileComponent } from './profile';
 
 @NgModule({
     imports: [
@@ -42,7 +42,9 @@ import { JwtInterceptor, ErrorInterceptor } from './_helpers';
         ReportsComponent,
         RegisterComponent,
         LoginComponent,
-        AlertComponent
+        AlertComponent,
+        ProfileComponent,
+        EditProfileComponent
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}, // Add JWT token to the request header.
