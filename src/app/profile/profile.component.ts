@@ -18,11 +18,11 @@ export class ProfileComponent implements OnInit{
         private formBuilder: FormBuilder,
         private router: Router,
         private profileService: ProfileService,
-    ) { }
+    ) { 
+
+    }
 
     ngOnInit() {
-
-        console.log('On init!');
          this.profileService.getCurrent()
         .pipe(first())
         .subscribe (

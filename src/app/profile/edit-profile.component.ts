@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertService, AuthenticationService, ProfileService } from '../_services';
+import { AlertService, AuthenticationService ,ProfileService } from '../_services';
+import { Profile } from '../_models';
+import { first } from 'rxjs/operators';
 
 @Component({
     selector: 'edit-profile-app',
@@ -15,22 +17,24 @@ export class EditProfileComponent implements OnInit{
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
-        private authenticationService: AuthenticationService,
         private profileService: ProfileService,
+        private authenticationService: AuthenticationService,
         private alertService: AlertService
     ) { }
 
     ngOnInit() {
-        this.editProfileForm = this.formBuilder.group({
-            accountId:  ['00000000-0000-0000-0000-000000000000', null],
-            firstName:  ['', [Validators.required]],
-            lastName:   ['', [Validators.required]],
-            middleName: ['', null],
-            birthDate:  ['', [Validators.required]],
-            gender:     ['Male', null],
-            weight:     [60, null],
-            height:     [170, null]
-        });
+        
+        this.profileService.getCurrent()
+        .pipe(first())
+        .subscribe (
+            data => {
+                this.fillEditProfileForm(data);
+            },
+            error => {
+                console.error(error);
+                this.fillEditProfileForm(null);
+            }
+        );
     }
 
     // Getter for easy access to register form fields.
@@ -40,26 +44,54 @@ export class EditProfileComponent implements OnInit{
     onSubmit() {
         this.submitted = true;
 
-        if (this.isInvalidEditForm()){
+        if (this.isInvalidEditProfileForm()){
             return;
         }
 
         this.loading = true;
 
-        this.profileService.register(this.editProfileForm.value)
+        console.log('Getting current...');
+        this.profileService.getCurrent()
             .subscribe(
                 profile => {
-                    this.router.navigate(['profile']);
+                        console.log('Updating...');
+                        var newProfile = this.editProfileForm.value as Profile;
+                        newProfile.id = profile.id;
+                        console.log(newProfile);
+                        this.profileService.update(newProfile)
+                        .subscribe(
+                            profile => {
+                                console.log(profile);
+                                console.log('Profile successfully updated!');
+                                this.router.navigate(['profile']);
+                            },
+                            error => {
+                                console.error(error);
+                                this.alertService.error(error);
+                                this.loading = false;
+                            });
                 },
                 error => {
-                    this.alertService.error(error);
-                    this.loading = false;
-                    this.authenticationService.logout();
-                });
+                    console.log(error);
+                    console.log('Registering...');
+                        this.profileService.register(this.editProfileForm.value)
+                        .subscribe(
+                            profile => {
+                                console.log(profile);
+                                console.log('Profile successfully registered!');
+                                this.router.navigate(['profile']);
+                            },
+                            error => {
+                                console.error(error);
+                                this.alertService.error(error);
+                                this.loading = false;
+                            });
+                }
+            );
     }
 
     // Check validity of edit profile form.
-    public isInvalidEditForm() : boolean {
+    public isInvalidEditProfileForm() : boolean {
         let invalid = [];
         let controls = this.editProfileForm.controls;
         for (const name in controls) {
@@ -69,5 +101,32 @@ export class EditProfileComponent implements OnInit{
         }
         let isValid = invalid.length > 0;
         return isValid;
+    }
+
+    // Fill edit profile form with data.
+    fillEditProfileForm(data: Profile) {
+
+        if (data != null) {
+            this.editProfileForm = this.formBuilder.group({
+                firstName:  [ data.firstName, null],
+                lastName:   [ data.lastName, null],
+                middleName: [ data.middleName, null],
+                birthDate:  [ data.birthDate, null],
+                gender:     [ data.gender, null],
+                weight:     [ data.weight, null],
+                height:     [ data.height, null]
+            });
+        } 
+        else {
+            this.editProfileForm = this.formBuilder.group({
+                firstName:  [ '', null],
+                lastName:   [ '', null],
+                middleName: [ '', null],
+                birthDate:  [ '', null],
+                gender:     [ '', null],
+                weight:     [ '', null],
+                height:     [ '', null]
+            });
+        }
     }
 }

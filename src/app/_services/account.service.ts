@@ -24,7 +24,7 @@ export class AccountService {
 
     update(account: Account) {
         const myHeaders = new HttpHeaders().set('Content-Type', 'application/json');
-        return this.http.post(`${this.accountUrl}`, JSON.stringify(account), { headers: myHeaders, responseType: 'json' });
+        return this.http.put(`${this.accountUrl}`, JSON.stringify(account), { headers: myHeaders, responseType: 'json' });
     }
 
     deleteById(id:string) {
