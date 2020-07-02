@@ -6,10 +6,9 @@ import { SensorsComponent }   from './sensors';
 import { RecordsComponent }   from './records';
 import { PatientsComponent }   from './patients';
 import { ReportsComponent }   from './reports';
-import { LoginComponent }   from './login';
-import { RegisterComponent }   from './register';
-import { AuthGuard } from './_guards';
+import { LoginComponent, RegisterComponent }   from './account';
 import { ProfileComponent, EditProfileComponent } from './profile';
+import { AuthGuard } from './_guards';
 
 const appRoutes: Routes =[
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
