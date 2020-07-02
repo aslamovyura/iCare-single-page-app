@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertService, AuthenticationService ,ProfileService } from '../_services';
+import { AlertService, ProfileService } from '../_services';
 import { Profile } from '../_models';
 import { first } from 'rxjs/operators';
+import { DatePipe } from '@angular/common'
 
 @Component({
     selector: 'edit-profile-app',
@@ -13,13 +14,14 @@ export class EditProfileComponent implements OnInit{
     editProfileForm: FormGroup;
     loading = false;
     submitted = false;
+    opeation: string;
 
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
         private profileService: ProfileService,
-        private authenticationService: AuthenticationService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        public datepipe: DatePipe
     ) { }
 
     ngOnInit() {
@@ -28,17 +30,23 @@ export class EditProfileComponent implements OnInit{
         .pipe(first())
         .subscribe (
             data => {
-                this.fillEditProfileForm(data);
+                if (data == null) {
+                    this.opeation ='Create';
+                    this.fillEditProfileForm(null);
+                }
+                else {
+                    this.opeation ='Update';
+                    this.fillEditProfileForm(data);
+                }
             },
             error => {
-                console.error(error);
-                this.fillEditProfileForm(null);
+                this.alertService.error('Problems with connection to Profile service!');
             }
         );
     }
 
     // Getter for easy access to register form fields.
-    get f() { return this.editProfileForm.controls; }
+    get f() { return this.editProfileForm?.controls; }
 
     // Submit registration form.
     onSubmit() {
@@ -49,8 +57,6 @@ export class EditProfileComponent implements OnInit{
         }
 
         this.loading = true;
-
-        console.log('Getting current...');
         this.profileService.getCurrent()
             .subscribe(
                 profile => {
@@ -64,6 +70,7 @@ export class EditProfileComponent implements OnInit{
                                 console.log(profile);
                                 console.log('Profile successfully updated!');
                                 this.router.navigate(['profile']);
+                                this.loading = false;
                             },
                             error => {
                                 console.error(error);
@@ -80,6 +87,7 @@ export class EditProfileComponent implements OnInit{
                                 console.log(profile);
                                 console.log('Profile successfully registered!');
                                 this.router.navigate(['profile']);
+                                this.loading = false;
                             },
                             error => {
                                 console.error(error);
@@ -107,25 +115,26 @@ export class EditProfileComponent implements OnInit{
     fillEditProfileForm(data: Profile) {
 
         if (data != null) {
+            //this.date = data.birthDate;
             this.editProfileForm = this.formBuilder.group({
-                firstName:  [ data.firstName, null],
-                lastName:   [ data.lastName, null],
+                firstName:  [ data.firstName, [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
+                lastName:   [ data.lastName, [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
                 middleName: [ data.middleName, null],
-                birthDate:  [ data.birthDate, null],
-                gender:     [ data.gender, null],
-                weight:     [ data.weight, null],
-                height:     [ data.height, null]
+                birthDate:  [ this.datepipe.transform(data.birthDate, 'yyyy-MM-dd'), [Validators.required]],
+                gender:     [ data.gender, [Validators.required]],
+                weight:     [ data.weight, [Validators.required, Validators.min(20), Validators.max(250)]],
+                height:     [ data.height, [Validators.required, Validators.min(40), Validators.max(250)]]
             });
         } 
         else {
             this.editProfileForm = this.formBuilder.group({
-                firstName:  [ '', null],
-                lastName:   [ '', null],
+                firstName:  [ '', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
+                lastName:   [ '', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
                 middleName: [ '', null],
-                birthDate:  [ '', null],
-                gender:     [ '', null],
-                weight:     [ '', null],
-                height:     [ '', null]
+                birthDate:  [ '', [Validators.required]],
+                gender:     [ '', [Validators.required]],
+                weight:     [ '', [Validators.required, Validators.min(20), Validators.max(200)]],
+                height:     [ '', [Validators.required, Validators.min(40), Validators.max(250)]]
             });
         }
     }

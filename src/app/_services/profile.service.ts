@@ -34,6 +34,7 @@ export class ProfileService {
 
     update(profile: Profile) {
         profile.accountId = this.getCurrentAccountId();
+        console.log(profile);
         const myHeaders = new HttpHeaders().set('Content-Type', 'application/json');
         return this.http.put(`${this.profileUrl}/${profile.id}`, JSON.stringify(profile), { headers: myHeaders, responseType: 'json' });
     }

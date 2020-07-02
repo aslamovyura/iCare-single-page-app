@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS }   from '@angular/common/http';
+import { DatePipe } from '@angular/common'
 
 import { AppComponent }   from './app.component';
 import { routing }   from './app.routing';
@@ -49,6 +50,7 @@ import { ProfileComponent, EditProfileComponent } from './profile';
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}, // Add JWT token to the request header.
         {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}, // Catch errors.
+        [DatePipe]
     ],
     bootstrap: [ AppComponent ]
 })

@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AlertService, AuthenticationService } from '../_services';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
     selector: 'login-app',
@@ -56,10 +57,17 @@ export class LoginComponent implements OnInit {
             .pipe(first())
             .subscribe(
                 data => {
-                    this.router.navigate([this.returnUrl])
+                    // no content response
+                    if (data == null) { 
+                        this.alertService.error('Incorrect email or password!');
+                        this.loading = false;
+                    }
+                    else {
+                        this.router.navigate([this.returnUrl])
+                    }
                 },
                 error => {
-                    this.alertService.error(error);
+                    this.alertService.error('Connection problems!');
                     this.loading = false;
                 });
     }

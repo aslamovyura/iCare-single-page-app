@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService, AuthenticationService, AccountService } from '../_services';
-// import { User } from '../_models/user';
 
 @Component({
     selector: 'register-app',
@@ -27,19 +26,11 @@ export class RegisterComponent implements OnInit{
 
     ngOnInit() {
         this.registerForm = this.formBuilder.group({
-            //accountId:  ['00000000-0000-0000-0000-000000000000', null],
-            //firstName:  ['', [Validators.required]],
-            //lastName:   ['', [Validators.required]],
-            //middleName: ['', null],
             username:   ['', [Validators.required]],
             email:      ['', [Validators.required, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")]],
             password:   ['', [Validators.required]],
             role:       [1, null],
             isActive:   [true, null],
-            //birthDate:  ['', [Validators.required]],
-            //gender:     ['Male', null],
-            //weight:     [60, null],
-            //height:     [170, null]
         });
     }
 
@@ -60,26 +51,6 @@ export class RegisterComponent implements OnInit{
                 account => {
                     this.alertService.success('Registration successful', true);
                     this.router.navigate(['/login']);
-                    // this.authenticationService.login(this.f.email.value, this.f.password.value)
-                    //     .subscribe(
-                    //         login => {
-                    //             var user = this.registerForm.value;
-                    //             user.accountId = (account as User).id;
-                    //             this.userService.registerProfile(user)
-                    //                 .subscribe(
-                    //                     profile => {
-                    //                         this.router.navigate(['/']);
-                    //                     },
-                    //                     error => {
-                    //                         this.alertService.error(error);
-                    //                         this.loading = false;
-                    //                         this.authenticationService.logout();
-                    //                     });
-                    //         },
-                    //         error => {
-                    //             this.alertService.error(error);
-                    //             this.loading = false;
-                    //         });
                 },
                 error => {
                     this.alertService.error(error);
