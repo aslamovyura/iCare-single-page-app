@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService, ProfileService } from '../_services';
 import { Profile } from '../_models';
@@ -14,7 +14,7 @@ export class EditProfileComponent implements OnInit {
     editProfileForm: FormGroup;
     loading = false;
     submitted = false;
-    opeation: string;
+    operation: string;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -22,7 +22,18 @@ export class EditProfileComponent implements OnInit {
         private profileService: ProfileService,
         private alertService: AlertService,
         public datepipe: DatePipe
-    ) { }
+    ) 
+    {
+        this.editProfileForm = new FormGroup({
+            firstName: new FormControl(),
+            lastName: new FormControl(),
+            middleName: new FormControl(),
+            birthDate: new FormControl(),
+            gender: new FormControl(),
+            weight: new FormControl(),
+            height: new FormControl(),
+         });
+    }
 
     ngOnInit() {
         
@@ -30,12 +41,15 @@ export class EditProfileComponent implements OnInit {
         .pipe(first())
         .subscribe (
             data => {
+                console.log(data);
                 if (data == null) {
-                    this.opeation ='Create';
+                    this.operation ='Create';
+                    console.log('Create');
                     this.fillEditProfileForm(null);
                 }
                 else {
-                    this.opeation ='Update';
+                    this.operation ='Update';
+                    console.log('Update');
                     this.fillEditProfileForm(data);
                 }
             },
@@ -46,7 +60,7 @@ export class EditProfileComponent implements OnInit {
     }
 
     // Getter for easy access to register form fields.
-    get f() { return this.editProfileForm?.controls; }
+    get f() { return this.editProfileForm.controls; }
 
     // Submit registration form.
     onSubmit() {
@@ -60,10 +74,9 @@ export class EditProfileComponent implements OnInit {
         this.profileService.getCurrent()
             .subscribe(
                 profile => {
-                        console.log('Updating...');
+                    if (this.operation == 'Update') {
                         var newProfile = this.editProfileForm.value as Profile;
                         newProfile.id = profile.id;
-                        console.log(newProfile);
                         this.profileService.update(newProfile)
                         .subscribe(
                             profile => {
@@ -77,14 +90,10 @@ export class EditProfileComponent implements OnInit {
                                 this.alertService.error(error);
                                 this.loading = false;
                             });
-                },
-                error => {
-                    console.log(error);
-                    console.log('Registering...');
+                    } else {
                         this.profileService.register(this.editProfileForm.value)
                         .subscribe(
                             profile => {
-                                console.log(profile);
                                 console.log('Profile successfully registered!');
                                 this.router.navigate(['profile']);
                                 this.loading = false;
@@ -94,6 +103,12 @@ export class EditProfileComponent implements OnInit {
                                 this.alertService.error(error);
                                 this.loading = false;
                             });
+                    }
+                },
+                error => {
+                    console.error(error);
+                    this.alertService.error(error);
+                    this.loading = false;
                 }
             );
     }
@@ -115,7 +130,6 @@ export class EditProfileComponent implements OnInit {
     fillEditProfileForm(data: Profile) {
 
         if (data != null) {
-            //this.date = data.birthDate;
             this.editProfileForm = this.formBuilder.group({
                 firstName:  [ data.firstName, [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
                 lastName:   [ data.lastName, [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
