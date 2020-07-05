@@ -7,7 +7,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Serial</th>
                 <th scope="col">Type</th>
-                <th scope="col">Profile ID</th>
+                <th [ngStyle]="{ 'display': isAdminMode ? 'flex' : 'none' }" scope="col">Profile ID</th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -25,7 +25,7 @@
     <td>{{idx}}</td>
     <td>{{sensor.serial}}</td>
     <td>{{sensor.sensorType}}</td>
-    <td>{{sensor.profileId}}</td>
+    <td [ngStyle]="{ 'display': isAdminMode ? 'flex' : 'none' }">{{sensor.profileId}}</td>
     <td>
         <div>
             <button class="btn btn-group-lg btn-light" (click)="editSensor(sensor)">Edit</button>
@@ -47,8 +47,8 @@
             <option value="Acoustic">Acoustic</option>
         </select>
     </td>
-    <td>
-        <input type="text" [(ngModel)]="editedSensor.profileId" readonly disabled class="form-control" />
+    <td [ngStyle]="{ 'display': isAdminMode ? 'flex' : 'none' }">
+        <input type="text" [(ngModel)]="editedSensor.profileId" class="form-control" />
     </td>
     <td>
         <input type="button" value="Save" (click)="saveSensor()" class="btn btn-success" />

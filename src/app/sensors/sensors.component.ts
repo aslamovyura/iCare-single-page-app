@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Sensor } from '../_models';
-import { SensorService, AlertService, ProfileService } from '../_services';
+import { SensorService, AlertService, ProfileService, AuthenticationService } from '../_services';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -15,23 +15,61 @@ export class SensorsComponent implements OnInit {
     sensors: Sensor[];
     editedSensor: Sensor;
     isNewSensor: boolean;
+    isAdminMode: boolean;
 
     constructor(
         private sensorService: SensorService,
         private alertService: AlertService,
         private profileService: ProfileService,
+        private authenticationService: AuthenticationService,
     ) {
         this.sensors = new Array<Sensor>();
+        this.isAdminMode = false;
     }
 
     // Actions on initialization.
     ngOnInit(): void {
+        this.isAdminMode = this.authenticationService.getCurrentUserRole() == 'Admin' ? true : false;
         this.loadSensors();
     }
 
     // Load sensors from server.
     loadSensors(): void {
+
+        console.log('isAdminMode:', this.isAdminMode);
+
+        if (this.isAdminMode) {
+            this.loadAllSensors();
+        } else {
+            this.profileService.getCurrent().pipe(first())
+            .subscribe(
+                profile => {
+                    this.loadSensorsOfCurrentUser(profile.id);
+                },
+                error => {
+                    this.alertService.error('Sensor loading issues...');
+                }
+            );
+        }
+    }
+
+    private loadAllSensors() {
         this.sensorService.getAll()
+        .subscribe(
+            (data: Sensor[]) => {
+                this.sensors = data;
+                console.log(data);
+            },
+            error => {
+                this.sensors = null;
+                console.error(error);
+                this.alertService.error(error);
+            }
+        );
+    }
+
+    private loadSensorsOfCurrentUser(profileId: string) {
+        this.sensorService.getAllOfCurrentUser(profileId)
         .subscribe(
             (data: Sensor[]) => {
                 this.sensors = data;
@@ -50,6 +88,7 @@ export class SensorsComponent implements OnInit {
         this.editedSensor = new Sensor();
         this.profileService.getCurrent().pipe(first()).subscribe(
             profile => {
+
                 this.editedSensor.profileId = profile.id;
 
                 console.log('profile ID:',this.editedSensor.profileId);
