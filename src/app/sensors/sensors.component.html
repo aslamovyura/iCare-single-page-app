@@ -1,0 +1,26 @@
+<h1>Sensors</h1>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Serial</th>
+                <th scope="col">Type</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let sensor of sensorList; let i = index">
+                <th>{{i+1}}</th>
+                <td>{{sensor.serial}}</td>
+                <td>{{sensor.sensorType}}</td>
+                <td>
+                    <div>
+                        <button class="btn btn-group-lg btn-light">Edit</button>
+                        <button class="btn btn-group-lg btn-danger">Remove</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

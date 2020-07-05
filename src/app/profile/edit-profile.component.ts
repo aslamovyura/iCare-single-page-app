@@ -10,7 +10,7 @@ import { DatePipe } from '@angular/common'
     selector: 'edit-profile-app',
     templateUrl: './edit-profile.component.html'
 })
-export class EditProfileComponent implements OnInit{ 
+export class EditProfileComponent implements OnInit { 
     editProfileForm: FormGroup;
     loading = false;
     submitted = false;
