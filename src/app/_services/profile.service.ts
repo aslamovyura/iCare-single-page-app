@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Profile } from '../_models';
 import { AuthenticationService } from './authentication.service';
-import { first } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root'})
 export class ProfileService {
@@ -50,21 +49,5 @@ export class ProfileService {
         }
 
         return currentUser.id;
-    }
-
-    getCurrentProfileId() : string {
-        let id = this.getCurrentAccountId();
-        let profileId;
-        this.http.get<Profile>(`${this.profileUrl}/accountId/${id}`)
-            .pipe(first())
-            .subscribe(
-                data => {
-                    profileId = data.id;
-                },
-                error => {
-                    profileId = null;
-                }
-            );
-        return profileId;
     }
 }
