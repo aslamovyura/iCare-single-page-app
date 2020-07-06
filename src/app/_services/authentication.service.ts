@@ -51,7 +51,6 @@ export class AuthenticationService {
         if (currentUser == null) {
             return null;
         } else {
-            console.log(currentUser.role);
             return currentUser.role;
         }
     }

@@ -16,6 +16,7 @@ export class SensorsComponent implements OnInit {
     editedSensor: Sensor;
     isNewSensor: boolean;
     isAdminMode: boolean;
+    isLoading: boolean;
 
     constructor(
         private sensorService: SensorService,
@@ -25,6 +26,7 @@ export class SensorsComponent implements OnInit {
     ) {
         this.sensors = new Array<Sensor>();
         this.isAdminMode = false;
+        this.isLoading = false;
     }
 
     // Actions on initialization.
@@ -36,20 +38,22 @@ export class SensorsComponent implements OnInit {
     // Load sensors from server.
     loadSensors(): void {
 
-        console.log('isAdminMode:', this.isAdminMode);
+        this.isLoading = true;
 
         if (this.isAdminMode) {
             this.loadAllSensors();
+            this.isLoading = false;
         } else {
             this.profileService.getCurrent().pipe(first())
             .subscribe(
                 profile => {
                     this.loadSensorsOfCurrentUser(profile.id);
+                    this.isLoading = false;
                 },
                 error => {
-                    this.alertService.error('Sensor loading issues...');
-                }
-            );
+                    this.alertService.error('Sensor loading issues!');
+                    this.isLoading = false;
+                });
         }
     }
 
@@ -114,16 +118,18 @@ export class SensorsComponent implements OnInit {
 
     // Delete sensor.
     deleteSensor(id: number) {
-        console.log(id);
+        this.isLoading = true;
         this.sensorService.deleteById(id)
             .subscribe(
                 data => {
                     this.loadSensors(),
                     this.alertService.success('Sensor successfully removed!');
+                    this.isLoading = false;
                 },
                 error => {
                     console.error(error);
                     this.alertService.error('Problems with sensor removing...');
+                    this.isLoading = false;
                 }
             )
     }
@@ -140,7 +146,7 @@ export class SensorsComponent implements OnInit {
     // Save new sensor.
     saveSensor() {
 
-        console.log(this.editedSensor);
+        this.isLoading = true;
         if (this.isNewSensor) {
             // Add new sensor.
             this.sensorService.register(this.editedSensor)
@@ -150,10 +156,12 @@ export class SensorsComponent implements OnInit {
                         this.isNewSensor = false;
                         this.editedSensor = null;
                         this.alertService.success('Sensor successfully registered!');
+                        this.isLoading = false;
                     },
                     error => {
                         this.alertService.error('Sensor registration error!');
                         this.cancel();
+                        this.isLoading = false;
                     });
         } else {
             
@@ -163,10 +171,12 @@ export class SensorsComponent implements OnInit {
                     data => {
                         this.loadSensors();
                         this.alertService.success('Sensor successfully updated!');
+                        this.isLoading = false;
                     },
                     error => {
                         this.alertService.error('Sensor updating error!');
                         this.cancel();
+                        this.isLoading = false;
                     });
             this.editedSensor = null;
         }

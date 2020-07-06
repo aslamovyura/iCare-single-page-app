@@ -40,8 +40,7 @@ export class EditProfileComponent implements OnInit {
         this.profileService.getCurrent()
         .pipe(first())
         .subscribe (
-            data => {
-                console.log(data);
+            data => {                
                 if (data == null) {
                     this.operation ='Create';
                     console.log('Create');
@@ -80,7 +79,6 @@ export class EditProfileComponent implements OnInit {
                         this.profileService.update(newProfile)
                         .subscribe(
                             profile => {
-                                console.log(profile);
                                 console.log('Profile successfully updated!');
                                 this.router.navigate(['profile']);
                                 this.loading = false;
