@@ -57,6 +57,7 @@ export class SensorsComponent implements OnInit {
         }
     }
 
+    // Load all registered sensor. 
     private loadAllSensors() {
         this.sensorService.getAll()
         .subscribe(
@@ -72,6 +73,7 @@ export class SensorsComponent implements OnInit {
         );
     }
 
+    // Load sensors only for current user.
     private loadSensorsOfCurrentUser(profileId: string) {
         this.sensorService.getAllOfCurrentUser(profileId)
         .subscribe(

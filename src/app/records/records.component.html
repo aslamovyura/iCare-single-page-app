@@ -1,0 +1,42 @@
+<h1>Data Records</h1>
+<div [ngStyle]="{ 'visibility': isLoading ? 'visible' : 'hidden' }">
+    <img class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+    />
+</div>
+<div [ngStyle]="{ 'visibility': isLoading ? 'hidden' : 'visible' }">
+    <p *ngIf="records == null">
+        No records were found.
+    </p>
+    <table [ngStyle]="{ 'visibility': records != null && records.length > 0 ? 'visible' : 'hidden' }" class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Date</th>
+                <th scope="col">Data Type</th>
+                <th scope="col">Sensor Serial</th>
+                <th scope="col">Status</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let record of records; let idx = index">
+                <ng-template [ngTemplateOutlet]="loadTemplate(record)" [ngTemplateOutletContext]="{ idx:idx+1, record:record}">
+                </ng-template>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--Read-only template-->
+<ng-template #readOnlyTemplate let-idx="idx" let-record="record">
+    <td>{{idx}}</td>
+    <td>{{record.date.toString().substr(0,10)}}</td>
+    <td>{{record.sensorDeviceType}}</td>
+    <td>{{record.sensorDeviceSerial}}</td>
+    <td><a href="#">Report</a></td>
+    <td>
+        <div>
+            <button class="btn btn-sm btn-danger" (click)="deleteRecord(record.id)">Remove</button>
+        </div>
+    </td>
+</ng-template>
