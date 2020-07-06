@@ -3,6 +3,8 @@ import { Record } from '../_models'
 import { AlertService, ProfileService, AuthenticationService } from '../_services';
 import { RecordService } from '../_services/record.service';
 import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute} from '@angular/router';
 
 @Component({
     selector: 'records-app',
@@ -14,20 +16,28 @@ export class RecordsComponent implements OnInit {
     @ViewChild('editTemplate', {static: false}) editTemplate: TemplateRef<any>;
 
     records: Record[];
-    editedRecord: Record;
-    isNewRecord: boolean;
     isAdminMode: boolean;
     isLoading: boolean;
+    sensorId: number;
+
+    private querySubscription: Subscription;
 
     constructor(
         private recordService: RecordService,
         private alertService: AlertService,
         private profileService: ProfileService,
         private authenticationService: AuthenticationService,
+        private route: ActivatedRoute, 
     ) {
         this.records = new Array<Record>();
         this.isAdminMode = false;
         this.isLoading = false;
+
+        this.querySubscription = route.queryParams.subscribe(
+            (queryParam: any) => {
+                this.sensorId = queryParam['sensorId'];
+            }
+        );
     }
 
     // Actions on initialization.
@@ -44,8 +54,13 @@ export class RecordsComponent implements OnInit {
         if (this.isAdminMode) {
             this.loadAllRecords();
             this.isLoading = false;
+
+        } else if(this.sensorId != null) {
+            this.loadAllSensorRecords(this.sensorId);
+            this.isLoading = false;
+
         } else {
-            this.profileService.getCurrent().pipe(first())
+            this.profileService.getCurrent()
             .subscribe(
                 profile => {
                     this.loadRecordsOfCurrentUser(profile.id);
@@ -69,8 +84,7 @@ export class RecordsComponent implements OnInit {
                 this.records = null;
                 console.error(error);
                 this.alertService.error(error);
-            }
-        );
+            });
     }
 
     // Load records only for current user.
@@ -80,7 +94,21 @@ export class RecordsComponent implements OnInit {
             this.records = recordList;
         });
     }
-    
+
+    // Load records only for the specific sensor.
+    private loadAllSensorRecords(sensorId: number) {
+        this.recordService.getAllSensorRecords(sensorId)
+        .subscribe(
+            (data: Record[]) => {
+                this.records = data;
+            },
+            error => {
+                this.records = null;
+                console.error(error);
+                this.alertService.error(error);
+            });
+    }
+
     // Delete sensor.
     deleteRecord(id: number) {
         this.isLoading = true;
@@ -101,10 +129,6 @@ export class RecordsComponent implements OnInit {
 
     // Load appropriate template.
     loadTemplate(record: Record) {
-        if (this.editedRecord && this.editedRecord.id === record.id) {
-            return this.editTemplate; // deleted.
-        } else {
-            return this.readOnlyTemplate;
-        }
+        return this.readOnlyTemplate;
     }
 }

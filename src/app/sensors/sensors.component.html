@@ -15,6 +15,7 @@
                 <th scope="col">Serial</th>
                 <th scope="col">Type</th>
                 <th [ngStyle]="{ 'display': isAdminMode ? 'flex' : 'none' }" scope="col">Profile ID</th>
+                <th scope="col">Status</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -33,6 +34,9 @@
     <td>{{sensor.serial}}</td>
     <td>{{sensor.sensorType}}</td>
     <td [ngStyle]="{ 'display': isAdminMode ? 'flex' : 'none' }">{{sensor.profileId}}</td>
+    <td>
+        <a routerLink="/records" [queryParams]="{ sensorId: sensor.id }">Records</a>
+    </td>
     <td>
         <div>
             <button class="btn btn-sm btn-warning" (click)="editSensor(sensor)">Edit</button>
@@ -57,6 +61,7 @@
     <td [ngStyle]="{ 'display': isAdminMode ? 'flex' : 'none' }">
         <input type="text" [(ngModel)]="editedSensor.profileId" class="form-control" />
     </td>
+    <td></td>
     <td>
         <input type="button" value="Save" (click)="saveSensor()" class="btn btn-success" />
         <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning" />

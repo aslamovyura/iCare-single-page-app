@@ -63,7 +63,6 @@ export class SensorsComponent implements OnInit {
         .subscribe(
             (data: Sensor[]) => {
                 this.sensors = data;
-                console.log(data);
             },
             error => {
                 this.sensors = null;
@@ -79,7 +78,6 @@ export class SensorsComponent implements OnInit {
         .subscribe(
             (data: Sensor[]) => {
                 this.sensors = data;
-                console.log(data);
             },
             error => {
                 this.sensors = null;
@@ -97,7 +95,6 @@ export class SensorsComponent implements OnInit {
 
                 this.editedSensor.profileId = profile.id;
 
-                console.log('profile ID:',this.editedSensor.profileId);
                 this.sensors.push(this.editedSensor);
                 this.isNewSensor = true;
             },
@@ -115,7 +112,6 @@ export class SensorsComponent implements OnInit {
         this.editedSensor.serial = sensor.serial;
         this.editedSensor.sensorType = sensor.sensorType;
         this.editedSensor.profileId = sensor.profileId;
-        console.log(this.editedSensor);
     }
 
     // Delete sensor.
