@@ -44,4 +44,14 @@ export class AuthenticationService {
         localStorage.removeItem('currentUser');
         this.currentUserSubject.next(null);
     }
+
+    // Get current role of the user.
+    getCurrentUserRole(): string {
+        let currentUser = this.currentUserValue;
+        if (currentUser == null) {
+            return null;
+        } else {
+            return currentUser.role;
+        }
+    }
 }

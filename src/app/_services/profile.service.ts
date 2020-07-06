@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Profile } from '../_models';
 import { AuthenticationService } from './authentication.service';
 
@@ -13,7 +13,6 @@ export class ProfileService {
     }
 
     getCurrent() {
-
         let id = this.getCurrentAccountId();
         return this.http.get<Profile>(`${this.profileUrl}/accountId/${id}`);
     }
