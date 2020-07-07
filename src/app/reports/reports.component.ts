@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Report } from '../_models'
-import { AlertService, ProfileService, AuthenticationService, RecordService, ReportService } from '../_services';
+import { AlertService, ProfileService, AuthenticationService, ReportService } from '../_services';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute} from '@angular/router';
 
@@ -21,7 +21,6 @@ export class ReportsComponent implements OnInit {
     private querySubscription: Subscription;
 
     constructor(
-        private recordService: RecordService,
         private alertService: AlertService,
         private profileService: ProfileService,
         private authenticationService: AuthenticationService,
@@ -39,6 +38,11 @@ export class ReportsComponent implements OnInit {
         );
     }
 
+    // Return reports, sorted by date (descending).
+    public get sortedReports() : Report[] {
+        return this.reports.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }
+
     // Actions on initialization.
     ngOnInit(): void {
         this.isAdminMode = this.authenticationService.getCurrentUserRole() == 'Admin' ? true : false;
@@ -50,11 +54,11 @@ export class ReportsComponent implements OnInit {
 
         this.isLoading = true;
 
-        if (this.isAdminMode) {
+        if (this.isAdminMode && this.recordId == null) {
             this.loadAllReports();
             this.isLoading = false;
 
-        } else if(this.recordId != null) {
+        } else if(this.recordId != null ) {
             this.loadAllRecordReports(this.recordId);
             this.isLoading = false;
 
@@ -133,5 +137,22 @@ export class ReportsComponent implements OnInit {
     // Load appropriate page template.
     loadTemplate(report: Report) {
         return this.readOnlyTemplate;
+    }
+
+    // Conver heath status to color.
+    convertStatusToColor(healthStatus: string) : string{
+        let color;
+        switch(healthStatus) {
+            case 'Healthy':
+                color = 'green';
+                break;
+            case 'Unknown':
+                color = 'yellow';
+                break;
+            case 'Diseased':
+                color = 'red';
+                break;
+        }
+        return color;
     }
 }

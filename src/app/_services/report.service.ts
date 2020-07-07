@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Report } from '../_models';
-import { SensorService, RecordService } from '../_services';
+import { SensorService } from './sensor.service';
+import { RecordService } from './record.service';
 
 @Injectable({ providedIn: 'root'})
 export class ReportService {
@@ -28,44 +29,31 @@ export class ReportService {
     // Get all reports of current user.
     getAllOfCurrentUser(profileId: string) {
         if (profileId != null) {
-            console.log('profile ID:', profileId);
             return new Promise( resolve => {
                 this.sensorService.getAllOfCurrentUser(profileId).subscribe(sensors => {
-
-                    console.log('Sensors:', sensors);
                     let reportsList = new Array<Report>();
                     for(const sensor of sensors) {
-
                         this.recordService.getAllSensorRecords(sensor.id).subscribe( records => {
 
-                                console.log('Records:', records);
                                 for(let record of records) {        
-
-                                    console.log('Single Record:', record);
                                     this.getRecordReport(record.id).subscribe( reports => {
-
-                                            console.log('_Reports:', reports);
-                                            if (reports != null) {
-                                                // Add last report.
-                                                console.log('_Single Report:', reports[0]);
-                                                reportsList.push(reports[0]); 
-                                            }
-                                        },
-                                        error => {
-                                            console.error('Report Error', error);
-                                            throw new Error(error);
-                                        })                            
+                                        if (reports != null && reports.length > 0) {
+                                            // Add last report.
+                                            reportsList.push(reports[0]); 
+                                        }
+                                    },
+                                    error => {
+                                        throw new Error(error);
+                                    })                            
                                 };
                                 resolve(reportsList);
                             },
                             error => {
-                                console.error('Records Error', error);
                                 throw new Error(error);
                             });
                     };
                 },
                 error => {
-                    console.error('Sensors Error', error);
                     throw new Error(error);
                 });
             }) 

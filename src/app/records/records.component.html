@@ -19,7 +19,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let record of records; let idx = index">
+            <tr *ngFor="let record of sortedRecords; let idx = index">
                 <ng-template [ngTemplateOutlet]="loadTemplate(record)" [ngTemplateOutletContext]="{ idx:idx+1, record:record}">
                 </ng-template>
             </tr>
@@ -33,7 +33,9 @@
     <td>{{record.date.toString().substr(0,10)}}</td>
     <td>{{record.sensorDeviceType}}</td>
     <td>{{record.sensorDeviceSerial}}</td>
-    <td><a href="#">Report</a></td>
+    <td>
+        <a routerLink="/reports" [queryParams]="{ recordId: record.id }">Report</a>
+    </td>
     <td>
         <div>
             <button class="btn btn-sm btn-danger" (click)="deleteRecord(record.id)">Remove</button>

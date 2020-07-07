@@ -17,11 +17,11 @@
                 <th scope="col">Health Description</th>
                 <th scope="col">Diseases</th>
                 <th scope="col">Accuracy, %</th>
-                <th scope="col">Actions</th>
+                <th [ngStyle]="{ 'display': isAdminMode ? 'flex' : 'none' }" scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let report of reports; let idx = index">
+            <tr *ngFor="let report of sortedReports; let idx = index">
                 <ng-template [ngTemplateOutlet]="loadTemplate(report)" [ngTemplateOutletContext]="{ idx:idx+1, report:report}">
                 </ng-template>
             </tr>
@@ -34,11 +34,11 @@
     <td>{{idx}}</td>
     <td>{{report.date.toString().substr(0,10)}}</td>
     <td>{{report.dataType}}</td>
-    <td>{{report.healthStatus}}</td>
+    <td [ngStyle]="{'background-color': convertStatusToColor(report.healthStatus)}">{{report.healthStatus}}</td>
     <td>{{report.healthDescription}}</td>
     <td>{{report.diseases}}</td>
     <td>{{report.accuracy}}</td>
-    <td>
+    <td [ngStyle]="{ 'display': isAdminMode ? 'flex' : 'none' }">
         <div>
             <button class="btn btn-sm btn-danger" (click)="deleteReport(report.id)">Remove</button>
         </div>

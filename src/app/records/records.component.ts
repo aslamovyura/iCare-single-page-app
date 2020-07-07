@@ -45,12 +45,17 @@ export class RecordsComponent implements OnInit {
         this.loadRecords();
     }
 
+    // Return records, sorted by date (descending).
+    public get sortedRecords() : Record[] {
+        return this.records.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }
+
     // Load records from server.
     loadRecords(): void {
 
         this.isLoading = true;
 
-        if (this.isAdminMode) {
+        if (this.isAdminMode && this.sensorId == null) {
             this.loadAllRecords();
             this.isLoading = false;
 
