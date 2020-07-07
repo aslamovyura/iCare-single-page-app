@@ -12,7 +12,6 @@ import { ActivatedRoute} from '@angular/router';
 export class RecordsComponent implements OnInit { 
 
     @ViewChild('readOnlyTemplate', {static: false}) readOnlyTemplate: TemplateRef<any>;
-    @ViewChild('editTemplate', {static: false}) editTemplate: TemplateRef<any>;
 
     records: Record[];
     isAdminMode: boolean;

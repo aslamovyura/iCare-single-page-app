@@ -11,12 +11,12 @@ import { ActivatedRoute} from '@angular/router';
 export class ReportsComponent implements OnInit { 
 
     @ViewChild('readOnlyTemplate', {static: false}) readOnlyTemplate: TemplateRef<any>;
-    @ViewChild('editTemplate', {static: false}) editTemplate: TemplateRef<any>;
 
     reports: Report[];
     isAdminMode: boolean;
     isLoading: boolean;
     recordId: number;
+    patientId: string;
 
     private querySubscription: Subscription;
 
@@ -34,6 +34,7 @@ export class ReportsComponent implements OnInit {
         this.querySubscription = this.route.queryParams.subscribe(
             (queryParam: any) => {
                 this.recordId = queryParam['recordId'];
+                this.patientId = queryParam['patientId'];
             }
         );
     }
@@ -52,21 +53,35 @@ export class ReportsComponent implements OnInit {
     // Load reports from server.
     loadReports(): void {
 
+
+        console.log('patientId:',this.patientId);
         this.isLoading = true;
 
-        if (this.isAdminMode && this.recordId == null) {
+        if (this.isAdminMode && this.recordId == null && this.patientId == null) {
+
+            console.log('Loaded Admin mode reports');
             this.loadAllReports();
             this.isLoading = false;
 
         } else if(this.recordId != null ) {
+
+            console.log('Loaded Record reports');
             this.loadAllRecordReports(this.recordId);
+            this.isLoading = false;
+        
+        } else if(this.patientId != null ) {
+
+            console.log('Loaded patient reports');
+            this.loadAllPatientReports(this.patientId);
             this.isLoading = false;
 
         } else {
+
+            console.log('Loaded current user reports');
             this.profileService.getCurrent()
             .subscribe(
                 profile => {
-                    this.loadReportsOfCurrentUser(profile.id);
+                    this.loadAllPatientReports(profile.id);
                     this.isLoading = false;
                 },
                 error => {
@@ -91,8 +106,8 @@ export class ReportsComponent implements OnInit {
     }
 
     // Load records only for current user.
-    private loadReportsOfCurrentUser(profileId: string) {
-        this.reportService.getAllOfCurrentUser(profileId)
+    private loadAllPatientReports(profileId: string) {
+        this.reportService.getAllProfileReports(profileId)
         .then((reportList: Report[]) => {
             this.reports = reportList;
         })

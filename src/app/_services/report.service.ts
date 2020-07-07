@@ -27,7 +27,7 @@ export class ReportService {
     }
 
     // Get all reports of current user.
-    getAllOfCurrentUser(profileId: string) {
+    getAllProfileReports(profileId: string) {
         if (profileId != null) {
             return new Promise( resolve => {
                 this.sensorService.getAllOfCurrentUser(profileId).subscribe(sensors => {
