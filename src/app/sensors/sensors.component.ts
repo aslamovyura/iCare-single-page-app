@@ -42,13 +42,11 @@ export class SensorsComponent implements OnInit {
 
         if (this.isAdminMode) {
             this.loadAllSensors();
-            this.isLoading = false;
         } else {
-            this.profileService.getCurrent().pipe(first())
+            this.profileService.getCurrent()
             .subscribe(
                 profile => {
                     this.loadSensorsOfCurrentUser(profile.id);
-                    this.isLoading = false;
                 },
                 error => {
                     this.alertService.error('Sensor loading issues!');
@@ -63,11 +61,13 @@ export class SensorsComponent implements OnInit {
         .subscribe(
             (data: Sensor[]) => {
                 this.sensors = data;
+                this.isLoading = false;
             },
             error => {
                 this.sensors = null;
                 console.error(error);
                 this.alertService.error('Problems with server connection!');
+                this.isLoading = false;
             }
         );
     }
@@ -78,11 +78,13 @@ export class SensorsComponent implements OnInit {
         .subscribe(
             (data: Sensor[]) => {
                 this.sensors = data;
+                this.isLoading = false;
             },
             error => {
                 this.sensors = null;
                 console.error(error);
                 this.alertService.error('Problems with server connection!');
+                this.isLoading = false;
             }
         );
     }

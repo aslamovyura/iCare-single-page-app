@@ -31,6 +31,10 @@ export class ReportService {
         if (profileId != null) {
             return new Promise( resolve => {
                 this.sensorService.getAllOfCurrentUser(profileId).subscribe(sensors => {
+                    if (sensors.length == 0) {
+                        resolve(null);
+                    }
+                    
                     let reportsList = new Array<Report>();
                     for(const sensor of sensors) {
                         this.recordService.getAllSensorRecords(sensor.id).subscribe( records => {

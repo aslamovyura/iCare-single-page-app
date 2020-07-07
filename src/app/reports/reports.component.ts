@@ -52,37 +52,22 @@ export class ReportsComponent implements OnInit {
 
     // Load reports from server.
     loadReports(): void {
-
-
-        console.log('patientId:',this.patientId);
         this.isLoading = true;
 
         if (this.isAdminMode && this.recordId == null && this.patientId == null) {
-
-            console.log('Loaded Admin mode reports');
             this.loadAllReports();
-            this.isLoading = false;
 
         } else if(this.recordId != null ) {
-
-            console.log('Loaded Record reports');
             this.loadAllRecordReports(this.recordId);
-            this.isLoading = false;
         
         } else if(this.patientId != null ) {
-
-            console.log('Loaded patient reports');
             this.loadAllPatientReports(this.patientId);
-            this.isLoading = false;
 
         } else {
-
-            console.log('Loaded current user reports');
             this.profileService.getCurrent()
             .subscribe(
                 profile => {
                     this.loadAllPatientReports(profile.id);
-                    this.isLoading = false;
                 },
                 error => {
                     this.alertService.error('Report loading issues!');
@@ -97,11 +82,13 @@ export class ReportsComponent implements OnInit {
         .subscribe(
             (data: Report[]) => {
                 this.reports = data;
+                this.isLoading = false;
             },
             error => {
                 this.reports = null;
                 console.error(error);
                 this.alertService.error('Problems with server connection!');
+                this.isLoading = false;
             });
     }
 
@@ -110,10 +97,12 @@ export class ReportsComponent implements OnInit {
         this.reportService.getAllProfileReports(profileId)
         .then((reportList: Report[]) => {
             this.reports = reportList;
+            this.isLoading = false;
         })
         .catch(error => {
             console.error(error);
             this.alertService.error('Problems with server connection!');
+            this.isLoading = false;
         });
     }
 
@@ -123,11 +112,13 @@ export class ReportsComponent implements OnInit {
         .subscribe(
             (data: Report[]) => {
                 this.reports = data;
+                this.isLoading = false;
             },
             error => {
                 this.reports = null;
                 console.error(error);
                 this.alertService.error('Problems with server connection!');
+                this.isLoading = false;
             });
     }
 

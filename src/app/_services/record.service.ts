@@ -27,6 +27,10 @@ export class RecordService {
                 this.sensorService.getAllOfCurrentUser(profileId)
                 .subscribe(sensors => {
 
+                    if (sensors.length == 0) {
+                        resolve(null);
+                    }
+                    
                     let recordList = new Array<Record>();
                     for(const sensor of sensors) {
 
