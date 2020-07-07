@@ -83,7 +83,7 @@ export class RecordsComponent implements OnInit {
             error => {
                 this.records = null;
                 console.error(error);
-                this.alertService.error(error);
+                this.alertService.error('Problems with server connection!');
             });
     }
 
@@ -92,6 +92,10 @@ export class RecordsComponent implements OnInit {
         this.recordService.getAllOfCurrentUser(profileId)
         .then((recordList: Record[]) => {
             this.records = recordList;
+        })
+        .catch(error => {
+            console.error(error);
+            this.alertService.error('Problems with server connection!');
         });
     }
 
@@ -105,7 +109,7 @@ export class RecordsComponent implements OnInit {
             error => {
                 this.records = null;
                 console.error(error);
-                this.alertService.error(error);
+                this.alertService.error('Problems with server connection!');
             });
     }
 
