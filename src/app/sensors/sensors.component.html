@@ -4,11 +4,11 @@
     />
 </div>
 <div [ngStyle]="{ 'visibility': isLoading ? 'hidden' : 'visible' }">
-    <p *ngIf="sensors.length == 0">
+    <p *ngIf="sensors == null">
         No sensors found.
     </p>
     <button class="btn btn-sm btn-primary" (click)="addSensor()">Add sensor</button>
-    <table [ngStyle]="{ 'visibility': sensors.length > 0 ? 'visible' : 'hidden' }" class="table table-striped">
+    <table [ngStyle]="{ 'visibility': sensors != null && sensors.length > 0 ? 'visible' : 'hidden' }" class="table table-striped">
         <thead>
             <tr>
                 <th scope="col">#</th>

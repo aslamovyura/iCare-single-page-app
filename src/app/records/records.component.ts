@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Record } from '../_models'
 import { AlertService, ProfileService, AuthenticationService } from '../_services';
 import { RecordService } from '../_services/record.service';
-import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute} from '@angular/router';
 
@@ -33,7 +32,7 @@ export class RecordsComponent implements OnInit {
         this.isAdminMode = false;
         this.isLoading = false;
 
-        this.querySubscription = route.queryParams.subscribe(
+        this.querySubscription = this.route.queryParams.subscribe(
             (queryParam: any) => {
                 this.sensorId = queryParam['sensorId'];
             }
@@ -46,12 +45,17 @@ export class RecordsComponent implements OnInit {
         this.loadRecords();
     }
 
+    // Return records, sorted by date (descending).
+    public get sortedRecords() : Record[] {
+        return this.records.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    }
+
     // Load records from server.
     loadRecords(): void {
 
         this.isLoading = true;
 
-        if (this.isAdminMode) {
+        if (this.isAdminMode && this.sensorId == null) {
             this.loadAllRecords();
             this.isLoading = false;
 
@@ -83,7 +87,7 @@ export class RecordsComponent implements OnInit {
             error => {
                 this.records = null;
                 console.error(error);
-                this.alertService.error(error);
+                this.alertService.error('Problems with server connection!');
             });
     }
 
@@ -92,6 +96,10 @@ export class RecordsComponent implements OnInit {
         this.recordService.getAllOfCurrentUser(profileId)
         .then((recordList: Record[]) => {
             this.records = recordList;
+        })
+        .catch(error => {
+            console.error(error);
+            this.alertService.error('Problems with server connection!');
         });
     }
 
@@ -105,7 +113,7 @@ export class RecordsComponent implements OnInit {
             error => {
                 this.records = null;
                 console.error(error);
-                this.alertService.error(error);
+                this.alertService.error('Problems with server connection!');
             });
     }
 

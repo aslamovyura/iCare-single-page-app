@@ -18,7 +18,7 @@ export class SensorService {
         if (profileId != null) {
             return this.http.get<Sensor[]>(`${this.url}/${profileId}`);
         } else {
-            return null;
+            throw new Error('Unknown profile!');
         }
     }   
 

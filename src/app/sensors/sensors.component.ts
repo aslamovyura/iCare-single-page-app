@@ -67,7 +67,7 @@ export class SensorsComponent implements OnInit {
             error => {
                 this.sensors = null;
                 console.error(error);
-                this.alertService.error(error);
+                this.alertService.error('Problems with server connection!');
             }
         );
     }
@@ -82,7 +82,7 @@ export class SensorsComponent implements OnInit {
             error => {
                 this.sensors = null;
                 console.error(error);
-                this.alertService.error(error);
+                this.alertService.error('Problems with server connection!');
             }
         );
     }
@@ -99,8 +99,8 @@ export class SensorsComponent implements OnInit {
                 this.isNewSensor = true;
             },
             error => {
-                this.alertService.error(error);
                 console.error(error);
+                this.alertService.error('Sensor registering error!');
             }
         );
     }
