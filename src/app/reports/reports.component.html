@@ -1,0 +1,46 @@
+<h1>Health Reports</h1>
+<div [ngStyle]="{ 'visibility': isLoading ? 'visible' : 'hidden' }">
+    <img class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+    />
+</div>
+<div [ngStyle]="{ 'visibility': isLoading ? 'hidden' : 'visible' }">
+    <p *ngIf="reports == null">
+        No reports were found.
+    </p>
+    <table [ngStyle]="{ 'visibility': reports != null && reports.length > 0 ? 'visible' : 'hidden' }" class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Date</th>
+                <th scope="col">Data Type</th>
+                <th scope="col">Health Status</th>
+                <th scope="col">Health Description</th>
+                <th scope="col">Diseases</th>
+                <th scope="col">Accuracy, %</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let report of reports; let idx = index">
+                <ng-template [ngTemplateOutlet]="loadTemplate(report)" [ngTemplateOutletContext]="{ idx:idx+1, report:report}">
+                </ng-template>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--Read-only template-->
+<ng-template #readOnlyTemplate let-idx="idx" let-report="report">
+    <td>{{idx}}</td>
+    <td>{{report.date.toString().substr(0,10)}}</td>
+    <td>{{report.dataType}}</td>
+    <td>{{report.healthStatus}}</td>
+    <td>{{report.healthDescription}}</td>
+    <td>{{report.diseases}}</td>
+    <td>{{report.accuracy}}</td>
+    <td>
+        <div>
+            <button class="btn btn-sm btn-danger" (click)="deleteReport(report.id)">Remove</button>
+        </div>
+    </td>
+</ng-template>

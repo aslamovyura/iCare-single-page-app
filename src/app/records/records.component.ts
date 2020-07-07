@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Record } from '../_models'
 import { AlertService, ProfileService, AuthenticationService } from '../_services';
 import { RecordService } from '../_services/record.service';
-import { first } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute} from '@angular/router';
 
@@ -33,7 +32,7 @@ export class RecordsComponent implements OnInit {
         this.isAdminMode = false;
         this.isLoading = false;
 
-        this.querySubscription = route.queryParams.subscribe(
+        this.querySubscription = this.route.queryParams.subscribe(
             (queryParam: any) => {
                 this.sensorId = queryParam['sensorId'];
             }
