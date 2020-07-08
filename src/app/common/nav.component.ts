@@ -9,13 +9,14 @@ import { User } from '../_models';
 })
 export class NavComponent {
     currentUser: User;
+    isAdminMode: boolean;
 
     constructor(
         private router: Router,
         private authenticationService: AuthenticationService
     ) {
-
         this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+        this.authenticationService.currentUser.subscribe(x => this.isAdminMode = x.role == 'Admin' );
     }
 
     logout() {

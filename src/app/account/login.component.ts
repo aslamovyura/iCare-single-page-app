@@ -63,7 +63,9 @@ export class LoginComponent implements OnInit {
                         this.loading = false;
                     }
                     else {
-                        this.router.navigate([this.returnUrl])
+                        // this.router.navigate([this.returnUrl])
+                        window.location.reload();
+                        this.router.navigate(['/profile'])
                     }
                 },
                 error => {

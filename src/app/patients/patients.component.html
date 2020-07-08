@@ -1,26 +1,24 @@
-<h1>Data Records</h1>
+<h1>Patients</h1>
 <div [ngStyle]="{ 'display': isLoading ? 'flex' : 'none' }">
     <img class="pl-3" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
     />
 </div>
 <div [ngStyle]="{ 'visibility': isLoading ? 'hidden' : 'visible' }">
-    <p *ngIf="records == null || records.length == 0">
-        No records were found.
+    <p *ngIf="patients == null || patients.length == 0">
+        No patients found.
     </p>
-    <table [ngStyle]="{ 'visibility': records != null && records.length > 0 ? 'visible' : 'hidden' }" class="table table-striped">
+    <table [ngStyle]="{ 'visibility': patients != null && patients.length > 0 ? 'visible' : 'hidden' }" class="table table-striped">
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Date</th>
-                <th scope="col">Data Type</th>
-                <th scope="col">Sensor Serial</th>
-                <th scope="col">Status</th>
+                <th scope="col">Name</th>
+                <th scope="col">Health Status</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let record of sortedRecords; let idx = index">
-                <ng-template [ngTemplateOutlet]="loadTemplate(record)" [ngTemplateOutletContext]="{ idx:idx+1, record:record}">
+            <tr *ngFor="let patient of patients; let idx = index">
+                <ng-template [ngTemplateOutlet]="loadTemplate(patient)" [ngTemplateOutletContext]="{ idx:idx+1, patient:patient}">
                 </ng-template>
             </tr>
         </tbody>
@@ -28,17 +26,15 @@
 </div>
 
 <!--Read-only template-->
-<ng-template #readOnlyTemplate let-idx="idx" let-record="record">
+<ng-template #readOnlyTemplate let-idx="idx" let-patient="patient">
     <td>{{idx}}</td>
-    <td>{{record.date.toString().substr(0,10)}}</td>
-    <td>{{record.sensorDeviceType}}</td>
-    <td>{{record.sensorDeviceSerial}}</td>
+    <td>{{patient.lastName}} {{patient.firstName.substr(0,1)}}.</td>
     <td>
-        <a routerLink="/reports" [queryParams]="{ recordId: record.id }">Report</a>
+        <a routerLink="/reports" [queryParams]="{ patientId: patient.id }">Report</a>
     </td>
     <td>
         <div>
-            <button class="btn btn-sm btn-danger" (click)="deleteRecord(record.id)">Remove</button>
+            <button class="btn btn-sm btn-danger" (click)="deletePatient(patient.id)">Remove</button>
         </div>
     </td>
 </ng-template>

@@ -11,12 +11,12 @@ import { ActivatedRoute} from '@angular/router';
 export class ReportsComponent implements OnInit { 
 
     @ViewChild('readOnlyTemplate', {static: false}) readOnlyTemplate: TemplateRef<any>;
-    @ViewChild('editTemplate', {static: false}) editTemplate: TemplateRef<any>;
 
     reports: Report[];
     isAdminMode: boolean;
     isLoading: boolean;
     recordId: number;
+    patientId: string;
 
     private querySubscription: Subscription;
 
@@ -34,6 +34,7 @@ export class ReportsComponent implements OnInit {
         this.querySubscription = this.route.queryParams.subscribe(
             (queryParam: any) => {
                 this.recordId = queryParam['recordId'];
+                this.patientId = queryParam['patientId'];
             }
         );
     }
@@ -51,23 +52,22 @@ export class ReportsComponent implements OnInit {
 
     // Load reports from server.
     loadReports(): void {
-
         this.isLoading = true;
 
-        if (this.isAdminMode && this.recordId == null) {
+        if (this.isAdminMode && this.recordId == null && this.patientId == null) {
             this.loadAllReports();
-            this.isLoading = false;
 
         } else if(this.recordId != null ) {
             this.loadAllRecordReports(this.recordId);
-            this.isLoading = false;
+        
+        } else if(this.patientId != null ) {
+            this.loadAllPatientReports(this.patientId);
 
         } else {
             this.profileService.getCurrent()
             .subscribe(
                 profile => {
-                    this.loadReportsOfCurrentUser(profile.id);
-                    this.isLoading = false;
+                    this.loadAllPatientReports(profile.id);
                 },
                 error => {
                     this.alertService.error('Report loading issues!');
@@ -82,23 +82,27 @@ export class ReportsComponent implements OnInit {
         .subscribe(
             (data: Report[]) => {
                 this.reports = data;
+                this.isLoading = false;
             },
             error => {
                 this.reports = null;
                 console.error(error);
                 this.alertService.error('Problems with server connection!');
+                this.isLoading = false;
             });
     }
 
     // Load records only for current user.
-    private loadReportsOfCurrentUser(profileId: string) {
-        this.reportService.getAllOfCurrentUser(profileId)
+    private loadAllPatientReports(profileId: string) {
+        this.reportService.getAllProfileReports(profileId)
         .then((reportList: Report[]) => {
             this.reports = reportList;
+            this.isLoading = false;
         })
         .catch(error => {
             console.error(error);
             this.alertService.error('Problems with server connection!');
+            this.isLoading = false;
         });
     }
 
@@ -108,11 +112,13 @@ export class ReportsComponent implements OnInit {
         .subscribe(
             (data: Report[]) => {
                 this.reports = data;
+                this.isLoading = false;
             },
             error => {
                 this.reports = null;
                 console.error(error);
                 this.alertService.error('Problems with server connection!');
+                this.isLoading = false;
             });
     }
 

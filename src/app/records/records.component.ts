@@ -12,7 +12,6 @@ import { ActivatedRoute} from '@angular/router';
 export class RecordsComponent implements OnInit { 
 
     @ViewChild('readOnlyTemplate', {static: false}) readOnlyTemplate: TemplateRef<any>;
-    @ViewChild('editTemplate', {static: false}) editTemplate: TemplateRef<any>;
 
     records: Record[];
     isAdminMode: boolean;
@@ -54,21 +53,18 @@ export class RecordsComponent implements OnInit {
     loadRecords(): void {
 
         this.isLoading = true;
-
+        console.log(this.isLoading);
         if (this.isAdminMode && this.sensorId == null) {
             this.loadAllRecords();
-            this.isLoading = false;
 
         } else if(this.sensorId != null) {
             this.loadAllSensorRecords(this.sensorId);
-            this.isLoading = false;
 
         } else {
             this.profileService.getCurrent()
             .subscribe(
                 profile => {
                     this.loadRecordsOfCurrentUser(profile.id);
-                    this.isLoading = false;
                 },
                 error => {
                     this.alertService.error('Record loading issues!');
@@ -83,11 +79,15 @@ export class RecordsComponent implements OnInit {
         .subscribe(
             (data: Record[]) => {
                 this.records = data;
+                this.isLoading = false;
+                console.log('All', this.isLoading);
             },
             error => {
                 this.records = null;
                 console.error(error);
                 this.alertService.error('Problems with server connection!');
+                this.isLoading = false;
+                console.log(this.isLoading);
             });
     }
 
@@ -96,10 +96,13 @@ export class RecordsComponent implements OnInit {
         this.recordService.getAllOfCurrentUser(profileId)
         .then((recordList: Record[]) => {
             this.records = recordList;
+            this.isLoading = false;
         })
         .catch(error => {
             console.error(error);
             this.alertService.error('Problems with server connection!');
+            this.isLoading = false;
+            console.log('currentUser', this.isLoading);
         });
     }
 
@@ -109,11 +112,15 @@ export class RecordsComponent implements OnInit {
         .subscribe(
             (data: Record[]) => {
                 this.records = data;
+                this.isLoading = false;
+                console.log('AllSensorRecords', this.isLoading);
             },
             error => {
                 this.records = null;
                 console.error(error);
                 this.alertService.error('Problems with server connection!');
+                this.isLoading = false;
+                console.log(this.isLoading);
             });
     }
 
