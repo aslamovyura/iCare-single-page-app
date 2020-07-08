@@ -4,6 +4,7 @@ import { AlertService, ProfileService, AuthenticationService } from '../_service
 import { RecordService } from '../_services/record.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute} from '@angular/router';
+import { AppConstants } from '../_constants/app-constants';
 
 @Component({
     selector: 'records-app',
@@ -17,6 +18,7 @@ export class RecordsComponent implements OnInit {
     isAdminMode: boolean;
     isLoading: boolean;
     sensorId: number;
+    imgSrc: string;
 
     private querySubscription: Subscription;
 
@@ -36,6 +38,7 @@ export class RecordsComponent implements OnInit {
                 this.sensorId = queryParam['sensorId'];
             }
         );
+        this.imgSrc = AppConstants.LOADING_GIF;
     }
 
     // Actions on initialization.
@@ -46,7 +49,11 @@ export class RecordsComponent implements OnInit {
 
     // Return records, sorted by date (descending).
     public get sortedRecords() : Record[] {
-        return this.records.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        if (this.records == null) {
+            return null;
+        } else {
+            return this.records.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        }
     }
 
     // Load records from server.
@@ -67,7 +74,7 @@ export class RecordsComponent implements OnInit {
                     this.loadRecordsOfCurrentUser(profile.id);
                 },
                 error => {
-                    this.alertService.error('Record loading issues!');
+                    this.alertService.error(AppConstants.LOAD_RECORDS_FAIL);
                     this.isLoading = false;
                 });
         }
@@ -85,7 +92,7 @@ export class RecordsComponent implements OnInit {
             error => {
                 this.records = null;
                 console.error(error);
-                this.alertService.error('Problems with server connection!');
+                this.alertService.error(AppConstants.CONNECTION_ISSUES);
                 this.isLoading = false;
                 console.log(this.isLoading);
             });
@@ -100,7 +107,7 @@ export class RecordsComponent implements OnInit {
         })
         .catch(error => {
             console.error(error);
-            this.alertService.error('Problems with server connection!');
+            this.alertService.error(AppConstants.CONNECTION_ISSUES);
             this.isLoading = false;
             console.log('currentUser', this.isLoading);
         });
@@ -118,7 +125,7 @@ export class RecordsComponent implements OnInit {
             error => {
                 this.records = null;
                 console.error(error);
-                this.alertService.error('Problems with server connection!');
+                this.alertService.error(AppConstants.CONNECTION_ISSUES);
                 this.isLoading = false;
                 console.log(this.isLoading);
             });
@@ -131,12 +138,12 @@ export class RecordsComponent implements OnInit {
             .subscribe(
                 data => {
                     this.loadRecords(),
-                    this.alertService.success('Record successfully removed!');
+                    this.alertService.success(AppConstants.REMOVE_RECORD_SUCCESS);
                     this.isLoading = false;
                 },
                 error => {
                     console.error(error);
-                    this.alertService.error('Problems with record removing...');
+                    this.alertService.error(AppConstants.REMOVE_RECORD_FAIL);
                     this.isLoading = false;
                 }
             )

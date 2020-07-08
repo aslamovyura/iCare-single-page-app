@@ -5,6 +5,7 @@ import { AlertService, ProfileService } from '../_services';
 import { Profile } from '../_models';
 import { first } from 'rxjs/operators';
 import { DatePipe } from '@angular/common'
+import { AppConstants } from '../_constants/app-constants';
 
 @Component({
     selector: 'edit-profile-app',
@@ -15,6 +16,7 @@ export class EditProfileComponent implements OnInit {
     loading = false;
     submitted = false;
     operation: string;
+    imgSrc: string;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -33,6 +35,7 @@ export class EditProfileComponent implements OnInit {
             weight: new FormControl(),
             height: new FormControl(),
          });
+         this.imgSrc = AppConstants.LOADING_GIF;
     }
 
     ngOnInit() {
@@ -53,7 +56,7 @@ export class EditProfileComponent implements OnInit {
                 }
             },
             error => {
-                this.alertService.error('Problems with connection to Profile service!');
+                this.alertService.error(AppConstants.CONNECTION_ISSUES);
             }
         );
     }
@@ -79,7 +82,8 @@ export class EditProfileComponent implements OnInit {
                         this.profileService.update(newProfile)
                         .subscribe(
                             profile => {
-                                console.log('Profile successfully updated!');
+                                console.log(AppConstants.UPDATE_PROFILE_SUCCESS);
+                                this.alertService.success(AppConstants.UPDATE_PROFILE_SUCCESS, true)
                                 this.router.navigate(['profile']);
                                 this.loading = false;
                             },
@@ -92,7 +96,8 @@ export class EditProfileComponent implements OnInit {
                         this.profileService.register(this.editProfileForm.value)
                         .subscribe(
                             profile => {
-                                console.log('Profile successfully registered!');
+                                console.log(AppConstants.CREATE_PROFILE_SUCCESS);
+                                this.alertService.success(AppConstants.CREATE_PROFILE_SUCCESS);
                                 this.router.navigate(['profile']);
                                 this.loading = false;
                             },

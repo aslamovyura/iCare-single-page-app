@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ProfileService, AlertService } from '../_services';
 import { first } from 'rxjs/operators';
 import { Profile } from '../_models';
+import { AppConstants } from '../_constants/app-constants';
 
 @Component({
     selector: 'profile-app',
@@ -13,13 +14,16 @@ export class ProfileComponent implements OnInit{
     profileForm: FormGroup;
     loading = false;
     isExist = false;
+    imgSrc: string;
 
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
         private profileService: ProfileService,
         private alertService: AlertService,
-    ) { }
+    ) { 
+        this.imgSrc = AppConstants.LOADING_GIF;
+    }
 
     ngOnInit() {
         this.profileService.getCurrent()
@@ -36,7 +40,7 @@ export class ProfileComponent implements OnInit{
             },
             error => {
                 console.error(error);
-                this.alertService.error('Problems with connection to Profile service!', true);
+                this.alertService.error(AppConstants.CONNECTION_ISSUES, true);
                 this.router.navigate(['/']);
             }
         );

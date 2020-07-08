@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AlertService, AuthenticationService, AccountService } from '../_services';
+import { AppConstants } from '../_constants/app-constants';
 
 @Component({
     selector: 'register-app',
@@ -11,6 +12,7 @@ export class RegisterComponent implements OnInit{
     registerForm: FormGroup;
     loading = false;
     submitted = false;
+    imgSrc: string;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -22,6 +24,7 @@ export class RegisterComponent implements OnInit{
         if (this.authenticationService.currentUserValue) {
             this.router.navigate(['/']);
         }
+        this.imgSrc = AppConstants.LOADING_GIF;
     }
 
     ngOnInit() {
@@ -49,7 +52,7 @@ export class RegisterComponent implements OnInit{
         this.accountService.register(this.registerForm.value)
             .subscribe(
                 account => {
-                    this.alertService.success('Registration successful', true);
+                    this.alertService.success(AppConstants.REGISTRATION_SUCCESS, true);
                     this.router.navigate(['/login']);
                 },
                 error => {

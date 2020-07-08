@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Profile } from '../_models'
 import { AlertService, ProfileService, AuthenticationService, ReportService } from '../_services';
+import { AppConstants } from '../_constants';
 
 @Component({
     selector: 'patients-app',
@@ -13,6 +14,7 @@ export class PatientsComponent implements OnInit {
     patients: Profile[];
     isAdminMode: boolean;
     isLoading: boolean;
+    imgSrc: string;
 
     constructor(
         private alertService: AlertService,
@@ -22,6 +24,7 @@ export class PatientsComponent implements OnInit {
         this.patients = new Array<Profile>();
         this.isAdminMode = false;
         this.isLoading = false;
+        this.imgSrc = AppConstants.LOADING_GIF;
     }
 
     // Actions on initialization.
@@ -39,13 +42,14 @@ export class PatientsComponent implements OnInit {
             this.profileService.getAll()
             .subscribe((data: Profile[]) => {
                     this.patients = data;
+                    this.isLoading = false;
                 },
                 error => {
                     this.patients = null;
                     console.error(error);
-                    this.alertService.error('Problems with server connection!');
+                    this.alertService.error(AppConstants.CONNECTION_ISSUES);
+                    this.isLoading = false;
                 });
-                this.isLoading = false;
         }
     }
 
@@ -56,12 +60,12 @@ export class PatientsComponent implements OnInit {
             .subscribe(
                 data => {
                     this.loadPatients(),
-                    this.alertService.success('Patients successfully removed!');
+                    this.alertService.success(AppConstants.REMOVE_PATIENT_SUCCESS);
                     this.isLoading = false;
                 },
                 error => {
                     console.error(error);
-                    this.alertService.error('Problems with patient removing...');
+                    this.alertService.error(AppConstants.REMOVE_PATIENT_FAIL);
                     this.isLoading = false;
                 }
             )
