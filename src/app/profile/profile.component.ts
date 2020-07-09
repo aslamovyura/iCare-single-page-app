@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProfileService, AlertService } from '../_services';
 import { Profile } from '../_models';
@@ -37,8 +37,6 @@ export class ProfileComponent implements OnInit{
     ngOnInit() {
         this.profileService.getCurrent()
         .then ((profile: Profile) => {
-            console.log('ON init profile:', profile);
-            console.log('profileId:', profile.id);
             if (profile == null) { 
                 this.router.navigate(['/profile/edit']);
             }
@@ -69,7 +67,7 @@ export class ProfileComponent implements OnInit{
                 weight:     [ data.weight, null],
                 height:     [ data.height, null]
             });
-        } 
+        }
         else {
             this.profileForm = this.formBuilder.group({
                 firstName:  [ '', null],

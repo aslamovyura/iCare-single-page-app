@@ -61,6 +61,6 @@
         <button [disabled]="loading" class="btn btn-primary">{{operation}}</button>
         <img *ngIf="loading" class="pl-3" src={{imgSrc}} />
         <a routerLink="/profile" class="btn btn-link">Cancel</a>
-        <!-- <button [disabled]="loading || operation=='Create'" (click)="onDelete()" class="btn btn-danger">Delete</button> -->
+        <a [hidden]="loading || operation=='Create'" (click)="onDelete()" class="btn btn-danger">Delete</a>
     </div>
 </form>

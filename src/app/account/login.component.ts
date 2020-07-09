@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
                     }
                     else {
                         // this.router.navigate([this.returnUrl])
-                        window.location.reload();
+                        location.reload(true);
                         this.router.navigate(['/profile'])
                     }
                 },
