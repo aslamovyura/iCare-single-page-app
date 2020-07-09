@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProfileService, AlertService } from '../_services';
-import { first } from 'rxjs/operators';
 import { Profile } from '../_models';
 import { AppConstants } from '../_constants/app-constants';
 
@@ -22,23 +21,32 @@ export class ProfileComponent implements OnInit{
         private profileService: ProfileService,
         private alertService: AlertService,
     ) { 
+        this.profileForm = new FormGroup({
+            firstName: new FormControl(),
+            lastName: new FormControl(),
+            middleName: new FormControl(),
+            birthDate: new FormControl(),
+            gender: new FormControl(),
+            weight: new FormControl(),
+            height: new FormControl(),
+         });
         this.imgSrc = AppConstants.LOADING_GIF;
     }
 
+    // Actions on initialization.
     ngOnInit() {
         this.profileService.getCurrent()
-        .pipe(first())
-        .subscribe (
-            data => {
-                if (data == null) { 
-                    this.router.navigate(['/profile/edit']);
-                }
-                else {
-                    this.fillProfileForm(data);
-                    this.isExist = true;
-                }
-            },
-            error => {
+        .then ((profile: Profile) => {
+            console.log('ON init profile:', profile);
+            console.log('profileId:', profile.id);
+            if (profile == null) { 
+                this.router.navigate(['/profile/edit']);
+            }
+            else {
+                this.fillProfileForm(profile);
+                this.isExist = true;
+            }})
+        .catch(error => {
                 console.error(error);
                 this.alertService.error(AppConstants.CONNECTION_ISSUES, true);
                 this.router.navigate(['/']);

@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Sensor } from '../_models';
+import { Sensor, Profile } from '../_models';
 import { SensorService, AlertService, ProfileService, AuthenticationService } from '../_services';
-import { first } from 'rxjs/operators';
 import { AppConstants } from '../_constants/app-constants';
 
 @Component({
@@ -45,16 +44,16 @@ export class SensorsComponent implements OnInit {
 
         if (this.isAdminMode) {
             this.loadAllSensors();
-        } else {
+        } 
+        else {
             this.profileService.getCurrent()
-            .subscribe(
-                profile => {
-                    this.loadSensorsOfCurrentUser(profile.id);
-                },
-                error => {
-                    this.alertService.error(AppConstants.LOAD_SENSORS_FAIL);
-                    this.isLoading = false;
-                });
+            .then((profile: Profile) => {
+                this.loadSensorsOfCurrentUser(profile.id);
+            })
+            .catch(error => {
+                this.alertService.error(AppConstants.LOAD_SENSORS_FAIL);
+                this.isLoading = false;
+            });
         }
     }
 
@@ -95,19 +94,16 @@ export class SensorsComponent implements OnInit {
     // Register new sensor.
     addSensor(): void {
         this.editedSensor = new Sensor();
-        this.profileService.getCurrent().pipe(first()).subscribe(
-            profile => {
-
-                this.editedSensor.profileId = profile.id;
-
-                this.sensors.push(this.editedSensor);
-                this.isNewSensor = true;
-            },
-            error => {
-                console.error(error);
-                this.alertService.error(AppConstants.REGISTER_SENSOR_FAIL);
-            }
-        );
+        this.profileService.getCurrent()
+        .then((profile: Profile) => {
+            this.editedSensor.profileId = profile.id;
+            this.sensors.push(this.editedSensor);
+            this.isNewSensor = true;
+        })
+        .catch(error => {
+            console.error(error);
+            this.alertService.error(AppConstants.REGISTER_SENSOR_FAIL);
+        });
     }
 
     // Edit existing sensor.

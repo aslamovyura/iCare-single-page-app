@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Report } from '../_models'
+import { Report, Profile } from '../_models'
 import { AlertService, ProfileService, AuthenticationService, ReportService } from '../_services';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute} from '@angular/router';
@@ -73,14 +73,13 @@ export class ReportsComponent implements OnInit {
 
         } else {
             this.profileService.getCurrent()
-            .subscribe(
-                profile => {
-                    this.loadAllPatientReports(profile.id);
-                },
-                error => {
-                    this.alertService.error(AppConstants.LOAD_REPORTS_FAIL);
-                    this.isLoading = false;
-                });
+            .then((profile: Profile) => {
+                this.loadAllPatientReports(profile.id);
+            })
+            .catch(error => {
+                this.alertService.error(AppConstants.LOAD_REPORTS_FAIL);
+                this.isLoading = false;
+            });
         }
     }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Record } from '../_models'
+import { Record, Profile } from '../_models'
 import { AlertService, ProfileService, AuthenticationService } from '../_services';
 import { RecordService } from '../_services/record.service';
 import { Subscription } from 'rxjs';
@@ -68,15 +68,28 @@ export class RecordsComponent implements OnInit {
             this.loadAllSensorRecords(this.sensorId);
 
         } else {
-            this.profileService.getCurrent()
-            .subscribe(
-                profile => {
-                    this.loadRecordsOfCurrentUser(profile.id);
-                },
-                error => {
-                    this.alertService.error(AppConstants.LOAD_RECORDS_FAIL);
-                    this.isLoading = false;
-                });
+
+            // let profileId = this.profileService.getProfileId();
+            // console.log('profileId:', profileId);
+
+            this.profileService.getCurrent().then((profile: Profile) => {
+                console.log('profileId:', profile.id);
+                this.loadRecordsOfCurrentUser(profile.id);
+            }).catch(error => {
+                this.alertService.error(AppConstants.LOAD_RECORDS_FAIL);
+                this.isLoading = false;
+            });
+            
+
+            // this.profileService.getCurrent()
+            // .subscribe(
+            //     profile => {
+            //         this.loadRecordsOfCurrentUser(profile.id);
+            //     },
+            //     error => {
+            //         this.alertService.error(AppConstants.LOAD_RECORDS_FAIL);
+            //         this.isLoading = false;
+            //     });
         }
     }
 
