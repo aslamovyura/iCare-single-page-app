@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ProfileService, AlertService } from '../_services';
-import { first } from 'rxjs/operators';
 import { Profile } from '../_models';
+import { AppConstants } from '../_constants/app-constants';
 
 @Component({
     selector: 'profile-app',
@@ -13,30 +13,40 @@ export class ProfileComponent implements OnInit{
     profileForm: FormGroup;
     loading = false;
     isExist = false;
+    imgSrc: string;
 
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
         private profileService: ProfileService,
         private alertService: AlertService,
-    ) { }
+    ) { 
+        this.profileForm = new FormGroup({
+            firstName: new FormControl(),
+            lastName: new FormControl(),
+            middleName: new FormControl(),
+            birthDate: new FormControl(),
+            gender: new FormControl(),
+            weight: new FormControl(),
+            height: new FormControl(),
+         });
+        this.imgSrc = AppConstants.LOADING_GIF;
+    }
 
+    // Actions on initialization.
     ngOnInit() {
         this.profileService.getCurrent()
-        .pipe(first())
-        .subscribe (
-            data => {
-                if (data == null) { 
-                    this.router.navigate(['/profile/edit']);
-                }
-                else {
-                    this.fillProfileForm(data);
-                    this.isExist = true;
-                }
-            },
-            error => {
+        .then ((profile: Profile) => {
+            if (profile == null) { 
+                this.router.navigate(['/profile/edit']);
+            }
+            else {
+                this.fillProfileForm(profile);
+                this.isExist = true;
+            }})
+        .catch(error => {
                 console.error(error);
-                this.alertService.error('Problems with connection to Profile service!', true);
+                this.alertService.error(AppConstants.CONNECTION_ISSUES, true);
                 this.router.navigate(['/']);
             }
         );
@@ -57,7 +67,7 @@ export class ProfileComponent implements OnInit{
                 weight:     [ data.weight, null],
                 height:     [ data.height, null]
             });
-        } 
+        }
         else {
             this.profileForm = this.formBuilder.group({
                 firstName:  [ '', null],

@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AlertService, AuthenticationService } from '../_services';
-import { HttpResponse } from '@angular/common/http';
+import { AppConstants } from '../_constants/app-constants';
 
 @Component({
     selector: 'login-app',
@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
     loading = false;
     submitted = false;
     returnUrl: string;
+    imgSrc: string;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -25,7 +26,8 @@ export class LoginComponent implements OnInit {
         // If already logged in, redirect to home page.
         if (this.authenticationService.currentUserValue){
             this.router.navigate(['/']);
-        } 
+        }
+        this.imgSrc = AppConstants.LOADING_GIF;
     }
 
     ngOnInit() {
@@ -59,17 +61,17 @@ export class LoginComponent implements OnInit {
                 data => {
                     // no content response
                     if (data == null) { 
-                        this.alertService.error('Incorrect email or password!');
+                        this.alertService.error(AppConstants.INCORRECT_LOGIN);
                         this.loading = false;
                     }
                     else {
                         // this.router.navigate([this.returnUrl])
-                        window.location.reload();
+                        location.reload(true);
                         this.router.navigate(['/profile'])
                     }
                 },
                 error => {
-                    this.alertService.error('Connection problems!');
+                    this.alertService.error(AppConstants.CONNECTION_ISSUES);
                     this.loading = false;
                 });
     }

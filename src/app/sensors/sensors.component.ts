@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Sensor } from '../_models';
+import { Sensor, Profile } from '../_models';
 import { SensorService, AlertService, ProfileService, AuthenticationService } from '../_services';
-import { first } from 'rxjs/operators';
+import { AppConstants } from '../_constants/app-constants';
 
 @Component({
     selector: 'sensors-app',
@@ -17,6 +17,7 @@ export class SensorsComponent implements OnInit {
     isNewSensor: boolean;
     isAdminMode: boolean;
     isLoading: boolean;
+    imgSrc: string;
 
     constructor(
         private sensorService: SensorService,
@@ -27,6 +28,7 @@ export class SensorsComponent implements OnInit {
         this.sensors = new Array<Sensor>();
         this.isAdminMode = false;
         this.isLoading = false;
+        this.imgSrc = AppConstants.LOADING_GIF;
     }
 
     // Actions on initialization.
@@ -42,16 +44,16 @@ export class SensorsComponent implements OnInit {
 
         if (this.isAdminMode) {
             this.loadAllSensors();
-        } else {
+        } 
+        else {
             this.profileService.getCurrent()
-            .subscribe(
-                profile => {
-                    this.loadSensorsOfCurrentUser(profile.id);
-                },
-                error => {
-                    this.alertService.error('Sensor loading issues!');
-                    this.isLoading = false;
-                });
+            .then((profile: Profile) => {
+                this.loadSensorsOfCurrentUser(profile.id);
+            })
+            .catch(error => {
+                this.alertService.error(AppConstants.LOAD_SENSORS_FAIL);
+                this.isLoading = false;
+            });
         }
     }
 
@@ -66,7 +68,7 @@ export class SensorsComponent implements OnInit {
             error => {
                 this.sensors = null;
                 console.error(error);
-                this.alertService.error('Problems with server connection!');
+                this.alertService.error(AppConstants.CONNECTION_ISSUES);
                 this.isLoading = false;
             }
         );
@@ -83,7 +85,7 @@ export class SensorsComponent implements OnInit {
             error => {
                 this.sensors = null;
                 console.error(error);
-                this.alertService.error('Problems with server connection!');
+                this.alertService.error(AppConstants.CONNECTION_ISSUES);
                 this.isLoading = false;
             }
         );
@@ -92,19 +94,16 @@ export class SensorsComponent implements OnInit {
     // Register new sensor.
     addSensor(): void {
         this.editedSensor = new Sensor();
-        this.profileService.getCurrent().pipe(first()).subscribe(
-            profile => {
-
-                this.editedSensor.profileId = profile.id;
-
-                this.sensors.push(this.editedSensor);
-                this.isNewSensor = true;
-            },
-            error => {
-                console.error(error);
-                this.alertService.error('Sensor registering error!');
-            }
-        );
+        this.profileService.getCurrent()
+        .then((profile: Profile) => {
+            this.editedSensor.profileId = profile.id;
+            this.sensors.push(this.editedSensor);
+            this.isNewSensor = true;
+        })
+        .catch(error => {
+            console.error(error);
+            this.alertService.error(AppConstants.REGISTER_SENSOR_FAIL);
+        });
     }
 
     // Edit existing sensor.
@@ -123,12 +122,12 @@ export class SensorsComponent implements OnInit {
             .subscribe(
                 data => {
                     this.loadSensors(),
-                    this.alertService.success('Sensor successfully removed!');
+                    this.alertService.success(AppConstants.REMOVE_SENSOR_SUCCESS);
                     this.isLoading = false;
                 },
                 error => {
                     console.error(error);
-                    this.alertService.error('Problems with sensor removing...');
+                    this.alertService.error(AppConstants.REMOVE_SENSOR_FAIL);
                     this.isLoading = false;
                 }
             )
@@ -155,11 +154,11 @@ export class SensorsComponent implements OnInit {
                         this.loadSensors();
                         this.isNewSensor = false;
                         this.editedSensor = null;
-                        this.alertService.success('Sensor successfully registered!');
+                        this.alertService.success(AppConstants.REGISTER_SENSOR_SUCCESS);
                         this.isLoading = false;
                     },
                     error => {
-                        this.alertService.error('Sensor registration error!');
+                        this.alertService.error(AppConstants.REGISTER_SENSOR_FAIL);
                         this.cancel();
                         this.isLoading = false;
                     });
@@ -170,11 +169,11 @@ export class SensorsComponent implements OnInit {
                 .subscribe(
                     data => {
                         this.loadSensors();
-                        this.alertService.success('Sensor successfully updated!');
+                        this.alertService.success(AppConstants.UPDATE_SENSOR_SUCCESS);
                         this.isLoading = false;
                     },
                     error => {
-                        this.alertService.error('Sensor updating error!');
+                        this.alertService.error(AppConstants.UPDATE_SENSOR_FAIL);
                         this.cancel();
                         this.isLoading = false;
                     });

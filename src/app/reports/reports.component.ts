@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Report } from '../_models'
+import { Report, Profile } from '../_models'
 import { AlertService, ProfileService, AuthenticationService, ReportService } from '../_services';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute} from '@angular/router';
+import { AppConstants } from '../_constants/app-constants';
 
 @Component({
     selector: 'reports-app',
@@ -17,6 +18,7 @@ export class ReportsComponent implements OnInit {
     isLoading: boolean;
     recordId: number;
     patientId: string;
+    imgSrc: string;
 
     private querySubscription: Subscription;
 
@@ -37,11 +39,17 @@ export class ReportsComponent implements OnInit {
                 this.patientId = queryParam['patientId'];
             }
         );
+
+        this.imgSrc = AppConstants.LOADING_GIF;
     }
 
     // Return reports, sorted by date (descending).
     public get sortedReports() : Report[] {
-        return this.reports.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        if (this.reports == null) {
+            return null;
+        } else {
+            return this.reports.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        }
     }
 
     // Actions on initialization.
@@ -65,14 +73,13 @@ export class ReportsComponent implements OnInit {
 
         } else {
             this.profileService.getCurrent()
-            .subscribe(
-                profile => {
-                    this.loadAllPatientReports(profile.id);
-                },
-                error => {
-                    this.alertService.error('Report loading issues!');
-                    this.isLoading = false;
-                });
+            .then((profile: Profile) => {
+                this.loadAllPatientReports(profile.id);
+            })
+            .catch(error => {
+                this.alertService.error(AppConstants.LOAD_REPORTS_FAIL);
+                this.isLoading = false;
+            });
         }
     }
 
@@ -87,7 +94,7 @@ export class ReportsComponent implements OnInit {
             error => {
                 this.reports = null;
                 console.error(error);
-                this.alertService.error('Problems with server connection!');
+                this.alertService.error(AppConstants.CONNECTION_ISSUES);
                 this.isLoading = false;
             });
     }
@@ -101,7 +108,7 @@ export class ReportsComponent implements OnInit {
         })
         .catch(error => {
             console.error(error);
-            this.alertService.error('Problems with server connection!');
+            this.alertService.error(AppConstants.CONNECTION_ISSUES);
             this.isLoading = false;
         });
     }
@@ -117,7 +124,7 @@ export class ReportsComponent implements OnInit {
             error => {
                 this.reports = null;
                 console.error(error);
-                this.alertService.error('Problems with server connection!');
+                this.alertService.error(AppConstants.CONNECTION_ISSUES);
                 this.isLoading = false;
             });
     }
@@ -129,12 +136,12 @@ export class ReportsComponent implements OnInit {
             .subscribe(
                 data => {
                     this.loadReports(),
-                    this.alertService.success('Report successfully removed!');
+                    this.alertService.success(AppConstants.REMOVE_REPORT_SUCCESS);
                     this.isLoading = false;
                 },
                 error => {
                     console.error(error);
-                    this.alertService.error('Problems with report removing...');
+                    this.alertService.error(AppConstants.REMOVE_REPORT_FAIL);
                     this.isLoading = false;
                 }
             )

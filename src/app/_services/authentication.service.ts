@@ -9,7 +9,9 @@ export class AuthenticationService {
     private currentUserSubject: BehaviorSubject<User>;
     public currentUser: Observable<User>;
 
-    constructor(private http: HttpClient){
+    constructor(
+        private http: HttpClient,
+    ){
         this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
     }
@@ -39,10 +41,12 @@ export class AuthenticationService {
     }
 
     logout() {
-
         // Clean local storage.
         localStorage.removeItem('currentUser');
         this.currentUserSubject.next(null);
+
+        // Clean current profile info.
+        localStorage.removeItem('profile');
     }
 
     // Get current role of the user.

@@ -3,8 +3,9 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { Router } from '@angular/router';
 import { AlertService, ProfileService } from '../_services';
 import { Profile } from '../_models';
-import { first } from 'rxjs/operators';
 import { DatePipe } from '@angular/common'
+import { AppConstants } from '../_constants/app-constants';
+import { AuthenticationService } from '../_services/authentication.service';
 
 @Component({
     selector: 'edit-profile-app',
@@ -15,13 +16,15 @@ export class EditProfileComponent implements OnInit {
     loading = false;
     submitted = false;
     operation: string;
+    imgSrc: string;
 
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
         private profileService: ProfileService,
         private alertService: AlertService,
-        public datepipe: DatePipe
+        private authenticationService: AuthenticationService,
+        public datepipe: DatePipe,
     ) 
     {
         this.editProfileForm = new FormGroup({
@@ -33,29 +36,26 @@ export class EditProfileComponent implements OnInit {
             weight: new FormControl(),
             height: new FormControl(),
          });
+         this.imgSrc = AppConstants.LOADING_GIF;
     }
 
+    // Actions on initialization
     ngOnInit() {
-        
         this.profileService.getCurrent()
-        .pipe(first())
-        .subscribe (
-            data => {                
-                if (data == null) {
-                    this.operation ='Create';
-                    console.log('Create');
-                    this.fillEditProfileForm(null);
-                }
-                else {
-                    this.operation ='Update';
-                    console.log('Update');
-                    this.fillEditProfileForm(data);
-                }
-            },
-            error => {
-                this.alertService.error('Problems with connection to Profile service!');
+        .then((profile: Profile) => {             
+            if (profile == null) {
+                this.operation ='Create';
+                console.log('Create');
+                this.fillEditProfileForm(null);
             }
-        );
+            else {
+                this.operation ='Update';
+                console.log('Update');
+                this.fillEditProfileForm(profile);
+            }})
+        .catch(error => {
+            this.alertService.error(AppConstants.CONNECTION_ISSUES);
+        });
     }
 
     // Getter for easy access to register form fields.
@@ -71,44 +71,66 @@ export class EditProfileComponent implements OnInit {
 
         this.loading = true;
         this.profileService.getCurrent()
-            .subscribe(
-                profile => {
-                    if (this.operation == 'Update') {
-                        var newProfile = this.editProfileForm.value as Profile;
-                        newProfile.id = profile.id;
-                        this.profileService.update(newProfile)
-                        .subscribe(
-                            profile => {
-                                console.log('Profile successfully updated!');
-                                this.router.navigate(['profile']);
-                                this.loading = false;
-                            },
-                            error => {
-                                console.error(error);
-                                this.alertService.error(error);
-                                this.loading = false;
-                            });
-                    } else {
-                        this.profileService.register(this.editProfileForm.value)
-                        .subscribe(
-                            profile => {
-                                console.log('Profile successfully registered!');
-                                this.router.navigate(['profile']);
-                                this.loading = false;
-                            },
-                            error => {
-                                console.error(error);
-                                this.alertService.error(error);
-                                this.loading = false;
-                            });
-                    }
-                },
-                error => {
-                    console.error(error);
-                    this.alertService.error(error);
-                    this.loading = false;
+            .then( (profile: Profile) => {
+                if (this.operation == 'Update') {
+                    var newProfile = this.editProfileForm.value as Profile;
+                    newProfile.id = profile.id;
+                    this.profileService.update(newProfile)
+                    .subscribe(
+                        data => {
+                            console.log(AppConstants.UPDATE_PROFILE_SUCCESS);
+                            this.alertService.success(AppConstants.UPDATE_PROFILE_SUCCESS, true)
+                            this.router.navigate(['profile']);
+                            this.loading = false;
+                        },
+                        error => {
+                            console.error(error);
+                            this.alertService.error(error);
+                            this.loading = false;
+                        });
+                } else {
+                    this.profileService.register(this.editProfileForm.value)
+                    .subscribe(
+                        profile => {
+                            console.log(AppConstants.CREATE_PROFILE_SUCCESS);
+                            this.alertService.success(AppConstants.CREATE_PROFILE_SUCCESS);
+                            this.router.navigate(['profile']);
+                            this.loading = false;
+                        },
+                        error => {
+                            console.error(error);
+                            this.alertService.error(error);
+                            this.loading = false;
+                        });
                 }
-            );
+            }).catch(error => {
+                console.error(error);
+                this.alertService.error(error);
+                this.loading = false;
+            })
+    }
+
+    // Delete current user (account + profile).
+    onDelete() {
+        this.profileService.getCurrent()
+        .then((profile: Profile) => {
+            this.profileService.deleteById(profile.id)
+                .subscribe(
+                    data => {
+                        this.authenticationService.logout();
+                        this.router.navigate(['/']);
+                        location.reload(true);
+                    },
+                    error => {
+                        console.error(error);
+                        this.alertService.error(error);
+                    }
+                )
+        })
+        .catch(error => {
+            console.error(error);
+            this.alertService.error(error);
+        })
     }
 
     // Check validity of edit profile form.
