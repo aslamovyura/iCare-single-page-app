@@ -1,3 +1,4 @@
+import { UrlConstants } from './../_constants/url-constants';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -6,7 +7,7 @@ export class AccountService {
     accountUrl: string;
 
     constructor(private http: HttpClient) { 
-        this.accountUrl = 'http://localhost:4004/api/accounts';
+        this.accountUrl = UrlConstants.ACCOUNTS_URL;
     }
 
     getAll() {
