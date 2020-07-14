@@ -1,0 +1,31 @@
+<h1>Services health check</h1>
+<div [ngStyle]="{ 'display': isLoading ? 'flex' : 'none' }">
+    <img class="pl-3" src={{imgSrc}} />
+</div>
+<div [ngStyle]="{ 'visibility': isLoading ? 'hidden' : 'visible' }">
+    <p *ngIf="healthChecks == null || healthChecks.length == 0">
+        No services were recognized.
+    </p>
+    <table [ngStyle]="{ 'visibility': healthChecks != null && healthChecks.length > 0 ? 'visible' : 'hidden' }" class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Service</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let hc of healthChecks; let idx = index">
+                <ng-template [ngTemplateOutlet]="loadTemplate()" [ngTemplateOutletContext]="{ idx:idx+1, hc:hc}">
+                </ng-template>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!--Read-only template-->
+<ng-template #readOnlyTemplate let-idx="idx" let-hc="hc">
+    <td>{{idx}}</td>
+    <td>{{hc.service}}</td>
+    <td [ngStyle]="{'background-color': convertStatusToColor(hc.status)}">{{hc.status}}</td>
+</ng-template>
