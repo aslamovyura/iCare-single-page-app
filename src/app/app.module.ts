@@ -15,6 +15,7 @@ import { PatientsComponent }   from './patients';
 import { ReportsComponent }   from './reports';
 import { LoginComponent, RegisterComponent}   from './account';
 import { ProfileComponent, EditProfileComponent } from './profile';
+import { HealthCheckComponent } from './health-check';
 
 import { AlertComponent } from './_components';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
@@ -41,7 +42,8 @@ import { JwtInterceptor, ErrorInterceptor } from './_helpers';
         LoginComponent,
         AlertComponent,
         ProfileComponent,
-        EditProfileComponent
+        EditProfileComponent,
+        HealthCheckComponent
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}, // Add JWT token to the request header.

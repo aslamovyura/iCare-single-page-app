@@ -1,3 +1,4 @@
+import { UrlConstants } from '../_constants';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Report } from '../_models';
@@ -13,7 +14,7 @@ export class ReportService {
         private sensorService: SensorService,
         private recordService: RecordService,
     ) { 
-        this.url = 'http://localhost:4002/api/reports';
+        this.url = UrlConstants.REPORTS_URL;
     }
 
     // Get all data processing reports.

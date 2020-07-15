@@ -68,10 +68,6 @@ export class RecordsComponent implements OnInit {
             this.loadAllSensorRecords(this.sensorId);
 
         } else {
-
-            // let profileId = this.profileService.getProfileId();
-            // console.log('profileId:', profileId);
-
             this.profileService.getCurrent().then((profile: Profile) => {
                 console.log('profileId:', profile.id);
                 this.loadRecordsOfCurrentUser(profile.id);
@@ -79,17 +75,6 @@ export class RecordsComponent implements OnInit {
                 this.alertService.error(AppConstants.LOAD_RECORDS_FAIL);
                 this.isLoading = false;
             });
-            
-
-            // this.profileService.getCurrent()
-            // .subscribe(
-            //     profile => {
-            //         this.loadRecordsOfCurrentUser(profile.id);
-            //     },
-            //     error => {
-            //         this.alertService.error(AppConstants.LOAD_RECORDS_FAIL);
-            //         this.isLoading = false;
-            //     });
         }
     }
 

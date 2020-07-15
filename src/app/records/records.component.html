@@ -29,7 +29,7 @@
 <!--Read-only template-->
 <ng-template #readOnlyTemplate let-idx="idx" let-record="record">
     <td>{{idx}}</td>
-    <td>{{record.date.toString().substr(0,10)}}</td>
+    <td>{{record.date.toString().substr(0,10)}} {{record.date.toString().substr(11,5)}}</td>
     <td>{{record.sensorDeviceType}}</td>
     <td>{{record.sensorDeviceSerial}}</td>
     <td>

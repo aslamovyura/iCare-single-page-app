@@ -1,3 +1,4 @@
+import { UrlConstants } from '../_constants';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Sensor } from '../_models';
@@ -7,7 +8,7 @@ export class SensorService {
     url: string;
 
     constructor(private http: HttpClient) { 
-        this.url = 'http://localhost:4001/api/sensors';
+        this.url = UrlConstants.SENSORS_URL;
     }
 
     getAll() {

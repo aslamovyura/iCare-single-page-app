@@ -36,9 +36,8 @@ export class PatientsComponent implements OnInit {
     // Load patients from server.
     loadPatients(): void {
 
-        this.isLoading = true;
-
         if (this.isAdminMode) {
+            this.isLoading = true;
             this.profileService.getAll()
             .subscribe((data: Profile[]) => {
                     this.patients = data;

@@ -1,31 +1,36 @@
 {
-    "version": 1,
-    "projects": {
-        "icare-app": {
-            "projectType": "application",
-            "root": "",
-            "sourceRoot": "src",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:browser",
-                    "options": {
-                        "outputPath": "dist/icare-app",
-                        "index": "src/index.html",
-                        "main": "src/main.ts",
-                        "polyfills": "src/polyfills.ts",
-                        "tsConfig": "tsconfig.json",
-                        "assets": ["src/assets"],
-                        "aot": true
-                    }
-                },
-                "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
-                    "options": {
-                        "browserTarget": "icare-app:build"
-                    }
-                }
-            }
+  "version": 1,
+  "projects": {
+    "icare-app": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/icare-app",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.json",
+            "assets": [
+              "src/assets"
+            ],
+            "aot": true
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "icare-app:build"
+          }
         }
-    },
-    "defaultProject": "icare-app"
+      }
+    }
+  },
+  "defaultProject": "icare-app",
+  "cli": {
+    "analytics": "a226d8f6-a4cb-4ace-b9ba-c42481424a84"
+  }
 }

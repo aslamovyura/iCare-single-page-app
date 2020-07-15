@@ -31,7 +31,7 @@
 <!--Read-only template-->
 <ng-template #readOnlyTemplate let-idx="idx" let-report="report">
     <td>{{idx}}</td>
-    <td>{{report.date.toString().substr(0,10)}}</td>
+    <td>{{report.date.toString().substr(0,10)}} {{report.date.toString().substr(11,5)}}</td>
     <td>{{report.dataType}}</td>
     <td [ngStyle]="{'background-color': convertStatusToColor(report.healthStatus)}">{{report.healthStatus}}</td>
     <td>{{report.healthDescription}}</td>

@@ -1,3 +1,4 @@
+import { UrlConstants } from './../_constants';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Record } from '../_models';
@@ -9,7 +10,7 @@ export class RecordService {
 
     constructor(private http: HttpClient,
                 private sensorService: SensorService) { 
-        this.url = 'http://localhost:4001/api/records';
+        this.url = UrlConstants.RECORDS_URL;
     }
 
     getAll() {
