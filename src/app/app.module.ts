@@ -19,6 +19,7 @@ import { HealthCheckComponent } from './health-check';
 
 import { AlertComponent } from './_components';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
     imports: [
@@ -26,7 +27,8 @@ import { JwtInterceptor, ErrorInterceptor } from './_helpers';
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
-        routing
+        routing,
+        NgxPaginationModule
     ],
     declarations: [
         AppComponent,
@@ -43,7 +45,7 @@ import { JwtInterceptor, ErrorInterceptor } from './_helpers';
         AlertComponent,
         ProfileComponent,
         EditProfileComponent,
-        HealthCheckComponent
+        HealthCheckComponent,
     ],
     providers: [
         {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}, // Add JWT token to the request header.

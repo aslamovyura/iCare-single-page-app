@@ -20,6 +20,9 @@ export class RecordsComponent implements OnInit {
     sensorId: number;
     imgSrc: string;
 
+    // Pagination controls
+    page: number = 1;
+
     private querySubscription: Subscription;
 
     constructor(

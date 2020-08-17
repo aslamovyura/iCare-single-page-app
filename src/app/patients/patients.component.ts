@@ -16,6 +16,9 @@ export class PatientsComponent implements OnInit {
     isLoading: boolean;
     imgSrc: string;
 
+    // Pagination controls
+    page: number = 1;
+
     constructor(
         private alertService: AlertService,
         private profileService: ProfileService,

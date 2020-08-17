@@ -19,6 +19,9 @@ export class ReportsComponent implements OnInit {
     recordId: number;
     patientId: string;
     imgSrc: string;
+    
+    // Pagination controls
+    page: number = 1;
 
     private querySubscription: Subscription;
 
