@@ -20,12 +20,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let report of sortedReports; let idx = index">
+            <tr *ngFor="let report of sortedReports | paginate: { itemsPerPage: 10, currentPage: page }; let idx = index">
                 <ng-template [ngTemplateOutlet]="loadTemplate(report)" [ngTemplateOutletContext]="{ idx:idx+1, report:report}">
                 </ng-template>
             </tr>
         </tbody>
     </table>
+    <pagination-controls class="my-pagination" (pageChange)="page= $event"></pagination-controls>
 </div>
 
 <!--Read-only template-->

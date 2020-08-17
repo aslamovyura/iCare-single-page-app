@@ -18,6 +18,9 @@ export class SensorsComponent implements OnInit {
     isAdminMode: boolean;
     isLoading: boolean;
     imgSrc: string;
+    
+    // Pagination controls
+    page: number = 1;
 
     constructor(
         private sensorService: SensorService,

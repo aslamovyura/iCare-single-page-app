@@ -19,12 +19,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let sensor of sensors; let idx = index">
+            <!-- <tr *ngFor="let sensor of sensors; let idx = index"> -->
+            <tr *ngFor="let sensor of sensors | paginate: { itemsPerPage: 10, currentPage: page }; let idx = index">
                 <ng-template [ngTemplateOutlet]="loadTemplate(sensor)" [ngTemplateOutletContext]="{ idx:idx+1, sensor:sensor}">
                 </ng-template>
             </tr>
         </tbody>
     </table>
+    <pagination-controls class="my-pagination" (pageChange)="page= $event"></pagination-controls>
 </div>
 
 <!--Read-only template-->

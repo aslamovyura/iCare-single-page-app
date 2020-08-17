@@ -16,12 +16,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let patient of patients; let idx = index">
+            <tr *ngFor="let patient of patients | paginate: { itemsPerPage: 10, currentPage: page }; let idx = index">
                 <ng-template [ngTemplateOutlet]="loadTemplate(patient)" [ngTemplateOutletContext]="{ idx:idx+1, patient:patient}">
                 </ng-template>
             </tr>
         </tbody>
     </table>
+    <pagination-controls class="my-pagination" (pageChange)="page= $event"></pagination-controls>
 </div>
 
 <!--Read-only template-->

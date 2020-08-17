@@ -1,20 +1,22 @@
 # iCare Single-Page Application
 
-This application is a frontend part of the [iCare microservice platform](https://github.com/aslamovyura/iCare-microservices-app) for monitoring patient health.
+![Node.js CI](https://github.com/aslamovyura/iCare-single-page-app/workflows/Node.js%20CI/badge.svg)
+
+This application is a front-end part of the [iCare microservice platform](https://github.com/aslamovyura/iCare-microservices-app) for monitoring patient health.
+Login/registration is required to use the iCare service.
 
 ## Getting Started
 
-Install required packages:
+To install required packages and run the application, type the following commands from the root directory:
 
 ```
 > npm install
+> npm start
 ```
 
-To run application, type the following command from the application root directory:
+## Built with
 
-```
-> ng serve --open
-```
+- [Angular 10](https://angular.io/).
 
 ## Author
 

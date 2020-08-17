@@ -25,3 +25,8 @@ main {
     position: relative;
     padding-bottom: 55px;
 }
+
+.my-pagination /deep/ .ngx-pagination .current {
+    background: red;
+    margin: 0;
+}
