@@ -20,7 +20,7 @@ export class HealthCheckService {
             {service: 'DataProcessor #1 API', url: UrlConstants.DATAPROCESSOR_1_API_HC_URL, status: null},
             {service: 'DataProcessor #2 API', url: UrlConstants.DATAPROCESSOR_2_API_HC_URL, status: null},
             {service: 'DataSource #1 API', url: UrlConstants.DATASOURCE_1_API_HC_URL, status: null},
-            {service: 'DataSource #1 API', url: UrlConstants.DATASOURCE_2_API_HC_URL, status: null},
+            {service: 'DataSource #2 API', url: UrlConstants.DATASOURCE_2_API_HC_URL, status: null},
         ];
     }
 

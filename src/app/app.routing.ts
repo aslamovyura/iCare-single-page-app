@@ -1,6 +1,7 @@
 import { Routes, RouterModule } from '@angular/router';
 
-import { HomeComponent, NotFoundComponent }   from './common';
+import { NotFoundComponent }   from './common';
+import { HomeComponent } from './home';
 import { SensorsComponent }   from './sensors';
 import { RecordsComponent }   from './records';
 import { PatientsComponent }   from './patients';
