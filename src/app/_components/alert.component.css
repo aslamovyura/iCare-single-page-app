@@ -1,0 +1,11 @@
+.alert {
+    width: 500px;
+    height: auto;
+    margin: auto;
+}
+
+.alert__message {
+    text-align: center;
+    text-justify: middle;
+    font-size: 18px;
+}
